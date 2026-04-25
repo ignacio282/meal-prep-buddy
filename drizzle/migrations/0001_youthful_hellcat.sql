@@ -1,0 +1,21 @@
+CREATE TABLE `user_preferences` (
+	`id` text PRIMARY KEY NOT NULL,
+	`age` integer NOT NULL,
+	`sex` text NOT NULL,
+	`height_unit` text NOT NULL,
+	`height_feet` integer,
+	`height_inches` integer,
+	`height_centimeters` integer,
+	`initial_weight` real NOT NULL,
+	`weight_unit` text NOT NULL,
+	`activity_per_week` text NOT NULL,
+	`calorie_target` integer NOT NULL,
+	`meals_per_day` text NOT NULL,
+	`liked_food_tags` text NOT NULL,
+	`liked_food_notes` text,
+	`disliked_foods` text,
+	`dietary_restrictions` text,
+	`cook_days` text NOT NULL,
+	`onboarding_completed_at` text NOT NULL,
+	`updated_at` text NOT NULL
+);

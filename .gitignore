@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# next
+.next/
+out/
+*.tsbuildinfo
+
+# local environment
+.env
+.env.local
+.env.*.local
+
+# logs
+npm-debug.log*
+pnpm-debug.log*
+
+# testing
+coverage/
+
+# database artifacts
+drizzle/local.db
+drizzle/local.db-*
+
+# misc
+.DS_Store

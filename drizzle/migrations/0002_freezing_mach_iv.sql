@@ -1,0 +1,22 @@
+CREATE TABLE `recipes` (
+	`id` text PRIMARY KEY NOT NULL,
+	`title` text NOT NULL,
+	`source_url` text,
+	`source_label` text,
+	`primary_protein` text NOT NULL,
+	`cuisine` text NOT NULL,
+	`total_calories` integer NOT NULL,
+	`calories_per_serving` integer NOT NULL,
+	`protein_grams` integer NOT NULL,
+	`carb_grams` integer NOT NULL,
+	`fat_grams` integer NOT NULL,
+	`servings` integer NOT NULL,
+	`prep_minutes` integer NOT NULL,
+	`tags` text NOT NULL,
+	`ingredients` text NOT NULL,
+	`steps` text NOT NULL,
+	`favorite` integer DEFAULT false NOT NULL,
+	`planned_this_week` integer DEFAULT false NOT NULL,
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL
+);
