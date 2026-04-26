@@ -46,16 +46,24 @@ function normalizeInputValue(value: string) {
   return value.trim().replace(/\s+/g, " ");
 }
 
-function hasCaseInsensitiveMatch(values: ReadonlyArray<string>, target: string) {
+function hasCaseInsensitiveMatch(
+  values: ReadonlyArray<string>,
+  target: string,
+) {
   const normalizedTarget = target.toLowerCase();
 
   return values.some((value) => value.toLowerCase() === normalizedTarget);
 }
 
-function findCaseInsensitiveMatch(values: ReadonlyArray<string>, target: string) {
+function findCaseInsensitiveMatch(
+  values: ReadonlyArray<string>,
+  target: string,
+) {
   const normalizedTarget = target.toLowerCase();
 
-  return values.find((value) => value.toLowerCase() === normalizedTarget) ?? null;
+  return (
+    values.find((value) => value.toLowerCase() === normalizedTarget) ?? null
+  );
 }
 
 function filterSuggestions({
@@ -70,9 +78,13 @@ function filterSuggestions({
   const normalizedQuery = normalizeInputValue(query).toLowerCase();
 
   return suggestions
-    .filter((suggestion) => !hasCaseInsensitiveMatch(selectedValues, suggestion))
+    .filter(
+      (suggestion) => !hasCaseInsensitiveMatch(selectedValues, suggestion),
+    )
     .filter((suggestion) =>
-      normalizedQuery ? suggestion.toLowerCase().includes(normalizedQuery) : true,
+      normalizedQuery
+        ? suggestion.toLowerCase().includes(normalizedQuery)
+        : true,
     )
     .slice(0, 8);
 }
@@ -165,7 +177,10 @@ export function NewRecipeFormFields({
 
   function addTag(value: string) {
     const normalizedValue = normalizeInputValue(value);
-    const matchingSuggestion = findCaseInsensitiveMatch(existingTags, normalizedValue);
+    const matchingSuggestion = findCaseInsensitiveMatch(
+      existingTags,
+      normalizedValue,
+    );
     const nextValue = matchingSuggestion ?? normalizedValue;
 
     if (!nextValue || hasCaseInsensitiveMatch(selectedTags, nextValue)) {
@@ -188,7 +203,10 @@ export function NewRecipeFormFields({
       return;
     }
 
-    setSelectedIngredients((currentIngredients) => [...currentIngredients, nextValue]);
+    setSelectedIngredients((currentIngredients) => [
+      ...currentIngredients,
+      nextValue,
+    ]);
     setIngredientQuery("");
   }
 
@@ -268,7 +286,9 @@ export function NewRecipeFormFields({
                       key={tag}
                       onClick={() =>
                         setSelectedTags((currentTags) =>
-                          currentTags.filter((currentTag) => currentTag !== tag),
+                          currentTags.filter(
+                            (currentTag) => currentTag !== tag,
+                          ),
                         )
                       }
                       type="button"
@@ -288,9 +308,12 @@ export function NewRecipeFormFields({
 
         <SurfaceCard className="space-y-6 p-6 sm:p-8">
           <div className="space-y-1">
-            <h2 className="text-h2 text-foreground">Macros and characteristics</h2>
+            <h2 className="text-h2 text-foreground">
+              Macros and characteristics
+            </h2>
             <p className="text-body text-foreground-muted">
-              Fill in the numbers and descriptors you want to keep with the recipe.
+              Fill in the numbers and descriptors you want to keep with the
+              recipe.
             </p>
           </div>
 
@@ -378,7 +401,9 @@ export function NewRecipeFormFields({
 
       <SurfaceCard className="space-y-6 p-6 sm:p-8">
         <div className="space-y-1">
-          <h2 className="text-h2 text-foreground">Ingredients and preparation</h2>
+          <h2 className="text-h2 text-foreground">
+            Ingredients and preparation
+          </h2>
           <p className="text-body text-foreground-muted">
             Add items on the left and review the current lists on the right.
           </p>
@@ -458,7 +483,7 @@ export function NewRecipeFormFields({
             </section>
           </div>
 
-          <div className="space-y-6 xl:border-l xl:border-background-light xl:pl-10">
+          <div className="xl:border-background-light space-y-6 xl:border-l xl:pl-10">
             <section className="space-y-4">
               <div className="space-y-1">
                 <h3 className="text-title text-foreground">Ingredient list</h3>
@@ -475,14 +500,17 @@ export function NewRecipeFormFields({
                       key={ingredient}
                       tone="raised"
                     >
-                      <span className="text-body text-foreground">{ingredient}</span>
+                      <span className="text-body text-foreground">
+                        {ingredient}
+                      </span>
                       <button
                         aria-label={`Remove ingredient ${ingredient}`}
                         className="text-foreground-muted hover:text-foreground inline-flex items-center justify-center transition-colors duration-200"
                         onClick={() =>
                           setSelectedIngredients((currentIngredients) =>
                             currentIngredients.filter(
-                              (currentIngredient) => currentIngredient !== ingredient,
+                              (currentIngredient) =>
+                                currentIngredient !== ingredient,
                             ),
                           )
                         }
@@ -514,16 +542,20 @@ export function NewRecipeFormFields({
                       key={`${step}-${index + 1}`}
                       tone="raised"
                     >
-                      <span className="bg-[hsl(var(--primary)/0.12)] text-primary flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      <span className="text-primary flex size-7 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--primary)/0.12)] text-sm font-semibold">
                         {index + 1}
                       </span>
-                      <p className="text-body min-w-0 flex-1 text-foreground">{step}</p>
+                      <p className="text-body text-foreground min-w-0 flex-1">
+                        {step}
+                      </p>
                       <button
                         aria-label={`Remove step ${index + 1}`}
                         className="text-foreground-muted hover:text-foreground inline-flex items-center justify-center transition-colors duration-200"
                         onClick={() =>
                           setSteps((currentSteps) =>
-                            currentSteps.filter((_, currentIndex) => currentIndex !== index),
+                            currentSteps.filter(
+                              (_, currentIndex) => currentIndex !== index,
+                            ),
                           )
                         }
                         type="button"
@@ -543,7 +575,7 @@ export function NewRecipeFormFields({
 
       <SurfaceCard className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <div className="bg-[hsl(var(--primary)/0.12)] text-primary rounded-full p-3">
+          <div className="text-primary rounded-full bg-[hsl(var(--primary)/0.12)] p-3">
             <BookOpenText className="size-5" strokeWidth={2} />
           </div>
           <div className="space-y-1">
@@ -554,7 +586,10 @@ export function NewRecipeFormFields({
           </div>
         </div>
 
-        <Button icon={<ArrowRight className="size-5" strokeWidth={2.2} />} type="submit">
+        <Button
+          icon={<ArrowRight className="size-5" strokeWidth={2.2} />}
+          type="submit"
+        >
           {submitLabel}
         </Button>
       </SurfaceCard>
@@ -571,7 +606,12 @@ export function NewRecipeFormFields({
         />
       ))}
       {steps.map((step, index) => (
-        <input key={`step-${index + 1}`} name="steps" type="hidden" value={step} />
+        <input
+          key={`step-${index + 1}`}
+          name="steps"
+          type="hidden"
+          value={step}
+        />
       ))}
     </>
   );

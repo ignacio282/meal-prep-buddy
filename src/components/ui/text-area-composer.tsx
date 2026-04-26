@@ -38,7 +38,10 @@ export function TextAreaComposer({
           "min-h-36 items-start gap-2 py-3",
         )}
       >
-        <Sparkles className="text-primary mt-1 size-5 shrink-0" strokeWidth={2} />
+        <Sparkles
+          className="text-primary mt-1 size-5 shrink-0"
+          strokeWidth={2}
+        />
         <textarea
           className={cn(
             "text-body placeholder:text-foreground-muted min-h-28 w-full resize-none bg-transparent outline-none",

@@ -1,4 +1,8 @@
-import { buildDashboardState, getRecipeDensity, getTargetPerMeal } from "@/features/dashboard/model";
+import {
+  buildDashboardState,
+  getRecipeDensity,
+  getTargetPerMeal,
+} from "@/features/dashboard/model";
 import type { DashboardSearchFilters } from "@/features/dashboard/search-params";
 import type { SavedRecipe } from "@/server/repositories/recipes";
 import type { WeeklyPlan } from "@/server/repositories/weekly-plan";
@@ -179,12 +183,12 @@ describe("dashboard model", () => {
       view: "randomizer",
     });
 
-    expect(state.suggestedRecipes.map((suggestion) => suggestion.recipe.id)).toEqual([
-      "exact",
-      "protein-fallback",
-      "cuisine-fallback",
-    ]);
-    expect(state.suggestedRecipes.map((suggestion) => suggestion.label)).toEqual([
+    expect(
+      state.suggestedRecipes.map((suggestion) => suggestion.recipe.id),
+    ).toEqual(["exact", "protein-fallback", "cuisine-fallback"]);
+    expect(
+      state.suggestedRecipes.map((suggestion) => suggestion.label),
+    ).toEqual([
       "Top choice",
       "Something with Chicken",
       "Something from the same Mediterranean",
@@ -244,6 +248,9 @@ describe("dashboard model", () => {
       "Cucumber",
       "Yogurt",
     ]);
-    expect(state.weeklyPlan.assignedRecipeIds).toEqual(["slot-one", "slot-two"]);
+    expect(state.weeklyPlan.assignedRecipeIds).toEqual([
+      "slot-one",
+      "slot-two",
+    ]);
   });
 });

@@ -198,11 +198,15 @@ function DesktopStepRail({
                 className={cn(
                   "flex size-11 items-center justify-center rounded-full border text-sm font-semibold",
                   active || completed
-                    ? "border-[hsl(var(--foreground-white)/0.88)] bg-[hsl(var(--foreground-white)/0.12)] text-foreground-white"
+                    ? "text-foreground-white border-[hsl(var(--foreground-white)/0.88)] bg-[hsl(var(--foreground-white)/0.12)]"
                     : "border-[hsl(var(--foreground-white)/0.34)] text-[hsl(var(--foreground-white)/0.72)]",
                 )}
               >
-                {completed ? <Check className="size-4" strokeWidth={2.6} /> : index + 1}
+                {completed ? (
+                  <Check className="size-4" strokeWidth={2.6} />
+                ) : (
+                  index + 1
+                )}
               </div>
               {index < steps.length - 1 ? (
                 <span className="mt-2 block h-12 w-px bg-[hsl(var(--foreground-white)/0.24)]" />
@@ -214,7 +218,9 @@ function DesktopStepRail({
                 <Icon
                   className={cn(
                     "size-4",
-                    active ? "text-foreground-white" : "text-[hsl(var(--foreground-white)/0.72)]",
+                    active
+                      ? "text-foreground-white"
+                      : "text-[hsl(var(--foreground-white)/0.72)]",
                   )}
                   strokeWidth={2.1}
                 />
@@ -226,7 +232,9 @@ function DesktopStepRail({
                 <p
                   className={cn(
                     "text-title",
-                    active ? "text-foreground-white" : "text-[hsl(var(--foreground-white)/0.78)]",
+                    active
+                      ? "text-foreground-white"
+                      : "text-[hsl(var(--foreground-white)/0.78)]",
                   )}
                 >
                   {step.title}
@@ -262,11 +270,15 @@ function MobileStepRail({
               className={cn(
                 "flex size-9 items-center justify-center rounded-full border text-sm font-semibold",
                 active || completed
-                  ? "border-primary bg-[hsl(var(--primary)/0.12)] text-primary"
+                  ? "border-primary text-primary bg-[hsl(var(--primary)/0.12)]"
                   : "border-background-light bg-background text-foreground-muted",
               )}
             >
-              {completed ? <Check className="size-4" strokeWidth={2.4} /> : index + 1}
+              {completed ? (
+                <Check className="size-4" strokeWidth={2.4} />
+              ) : (
+                index + 1
+              )}
             </div>
             {index < steps.length - 1 ? (
               <span className="bg-background-light block h-px w-8" />
@@ -349,7 +361,7 @@ function TagInput({
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <input
-          className="text-body bg-background-light placeholder:text-foreground-muted min-h-12 flex-1 rounded-md px-4 outline-none transition-colors duration-200 focus:ring-0"
+          className="text-body bg-background-light placeholder:text-foreground-muted min-h-12 flex-1 rounded-md px-4 transition-colors duration-200 outline-none focus:ring-0"
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
@@ -539,7 +551,9 @@ export function OnboardingFlow() {
           };
         };
 
-        const fieldErrors = mapErrors(responsePayload.errors?.fieldErrors ?? {});
+        const fieldErrors = mapErrors(
+          responsePayload.errors?.fieldErrors ?? {},
+        );
         setErrors(fieldErrors);
         setCurrentStep(getStepForField(Object.keys(fieldErrors)[0]));
         setSubmitError("We could not save your onboarding details yet.");
@@ -551,7 +565,9 @@ export function OnboardingFlow() {
         router.refresh();
       });
     } catch {
-      setSubmitError("Something went wrong while saving your onboarding details.");
+      setSubmitError(
+        "Something went wrong while saving your onboarding details.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -559,17 +575,19 @@ export function OnboardingFlow() {
 
   return (
     <main className="min-h-screen lg:grid lg:grid-cols-[24rem_minmax(0,1fr)]">
-      <aside className="relative hidden overflow-hidden bg-primary lg:flex lg:flex-col">
-        <div className="relative z-10 flex h-full flex-col px-8 py-10 text-foreground-white">
+      <aside className="bg-primary relative hidden overflow-hidden lg:flex lg:flex-col">
+        <div className="text-foreground-white relative z-10 flex h-full flex-col px-8 py-10">
           <div className="flex items-center gap-3">
-            <div className="bg-[hsl(var(--foreground-white)/0.12)] flex size-11 items-center justify-center rounded-2xl">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-[hsl(var(--foreground-white)/0.12)]">
               <ChefHat className="size-6" strokeWidth={2.2} />
             </div>
             <div className="space-y-1">
               <p className="text-caption text-[hsl(var(--foreground-white)/0.72)]">
                 Meal Prep Buddy
               </p>
-              <p className="text-title text-foreground-white">First-time setup</p>
+              <p className="text-title text-foreground-white">
+                First-time setup
+              </p>
             </div>
           </div>
 
@@ -577,7 +595,7 @@ export function OnboardingFlow() {
             <p className="text-caption text-[hsl(var(--foreground-white)/0.72)]">
               Set up once, reuse every week
             </p>
-            <h1 className="font-hero text-[2.5rem] leading-[1.08] font-extrabold text-foreground-white">
+            <h1 className="font-hero text-foreground-white text-[2.5rem] leading-[1.08] font-extrabold">
               Build the defaults that keep meal prep practical.
             </h1>
             <p className="text-body max-w-[18rem] text-[hsl(var(--foreground-white)/0.76)]">
@@ -604,7 +622,7 @@ export function OnboardingFlow() {
         </div>
 
         <div className="pointer-events-none absolute right-[-5rem] bottom-[-7rem] size-[20rem] rounded-full border border-[hsl(var(--foreground-white)/0.16)] bg-[radial-gradient(circle_at_center,hsl(var(--foreground-white)/0.22),transparent_68%)]" />
-        <div className="pointer-events-none absolute left-[-4rem] bottom-16 size-32 rounded-full border border-[hsl(var(--foreground-white)/0.1)] bg-[hsl(var(--foreground-white)/0.06)]" />
+        <div className="pointer-events-none absolute bottom-16 left-[-4rem] size-32 rounded-full border border-[hsl(var(--foreground-white)/0.1)] bg-[hsl(var(--foreground-white)/0.06)]" />
       </aside>
 
       <section className="flex min-h-screen items-center justify-center px-6 py-10 sm:px-8 lg:px-12 xl:px-20">
@@ -616,7 +634,9 @@ export function OnboardingFlow() {
                   <ChefHat className="size-5" strokeWidth={2.2} />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-caption text-foreground-muted">Meal Prep Buddy</p>
+                  <p className="text-caption text-foreground-muted">
+                    Meal Prep Buddy
+                  </p>
                   <p className="text-title text-foreground">First-time setup</p>
                 </div>
               </div>
@@ -628,7 +648,9 @@ export function OnboardingFlow() {
             <MobileStepRail currentStep={currentStep} />
 
             <div className="space-y-3">
-              <p className="text-caption text-primary">{currentStepContent.eyebrow}</p>
+              <p className="text-caption text-primary">
+                {currentStepContent.eyebrow}
+              </p>
               <h2 className="text-foreground font-hero text-[2.5rem] leading-[1.08] font-extrabold sm:text-[2.9rem]">
                 {currentStepContent.title}
               </h2>
@@ -666,7 +688,10 @@ export function OnboardingFlow() {
                     <SegmentedControl
                       onChange={(nextValue) => {
                         updateDraft("heightUnit", nextValue);
-                        updateDraft("weightUnit", nextValue === "metric" ? "kg" : "lb");
+                        updateDraft(
+                          "weightUnit",
+                          nextValue === "metric" ? "kg" : "lb",
+                        );
                       }}
                       options={[
                         { label: "Imperial", value: "imperial" },
@@ -681,7 +706,9 @@ export function OnboardingFlow() {
                       <TextField
                         errorText={errors.heightFeet}
                         label="Feet"
-                        onChange={(event) => updateDraft("heightFeet", event.target.value)}
+                        onChange={(event) =>
+                          updateDraft("heightFeet", event.target.value)
+                        }
                         placeholder="5"
                         type="number"
                         value={draft.heightFeet}
@@ -689,7 +716,9 @@ export function OnboardingFlow() {
                       <TextField
                         errorText={errors.heightInches}
                         label="Inches"
-                        onChange={(event) => updateDraft("heightInches", event.target.value)}
+                        onChange={(event) =>
+                          updateDraft("heightInches", event.target.value)
+                        }
                         placeholder="10"
                         type="number"
                         value={draft.heightInches}
@@ -713,7 +742,9 @@ export function OnboardingFlow() {
                   <TextField
                     errorText={errors.initialWeight}
                     label="Initial weight"
-                    onChange={(event) => updateDraft("initialWeight", event.target.value)}
+                    onChange={(event) =>
+                      updateDraft("initialWeight", event.target.value)
+                    }
                     placeholder={draft.weightUnit === "lb" ? "185" : "84"}
                     type="number"
                     value={draft.initialWeight}
@@ -721,7 +752,9 @@ export function OnboardingFlow() {
                   <div className="space-y-2">
                     <p className="text-caption text-foreground">Unit</p>
                     <SegmentedControl
-                      onChange={(nextValue) => updateDraft("weightUnit", nextValue)}
+                      onChange={(nextValue) =>
+                        updateDraft("weightUnit", nextValue)
+                      }
                       options={[
                         { label: "lb", value: "lb" },
                         { label: "kg", value: "kg" },
@@ -735,7 +768,9 @@ export function OnboardingFlow() {
                   errorText={errors.activityPerWeek}
                   helperText="A simple range is enough for the first planning version."
                   label="How many times do you exercise per week?"
-                  onChange={(event) => updateDraft("activityPerWeek", event.target.value)}
+                  onChange={(event) =>
+                    updateDraft("activityPerWeek", event.target.value)
+                  }
                   options={[...activityPerWeekOptions]}
                   value={draft.activityPerWeek}
                 />
@@ -748,7 +783,9 @@ export function OnboardingFlow() {
                   errorText={errors.calorieTarget}
                   helperText="Use the daily calorie number you want meal prep to support."
                   label="Calorie target"
-                  onChange={(event) => updateDraft("calorieTarget", event.target.value)}
+                  onChange={(event) =>
+                    updateDraft("calorieTarget", event.target.value)
+                  }
                   placeholder="2150"
                   type="number"
                   value={draft.calorieTarget}
@@ -758,7 +795,9 @@ export function OnboardingFlow() {
                   errorText={errors.mealsPerDay}
                   helperText="This helps the app think in portions and prep cadence."
                   label="How many times do you eat per day?"
-                  onChange={(event) => updateDraft("mealsPerDay", event.target.value)}
+                  onChange={(event) =>
+                    updateDraft("mealsPerDay", event.target.value)
+                  }
                   options={[...mealsPerDayOptions]}
                   value={draft.mealsPerDay}
                 />
@@ -787,7 +826,9 @@ export function OnboardingFlow() {
             {currentStep === "preferences" ? (
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <p className="text-caption text-foreground">Foods you like to eat</p>
+                  <p className="text-caption text-foreground">
+                    Foods you like to eat
+                  </p>
                   <TagInput
                     inputValue={draft.likedFoodInput}
                     onAdd={addFoodTag}
@@ -800,7 +841,9 @@ export function OnboardingFlow() {
                 <TextAreaComposer
                   helperText="Optional notes for cuisines, meal styles, or foods you prefer to prep often."
                   label="Food preference notes"
-                  onChange={(event) => updateDraft("likedFoodNotes", event.target.value)}
+                  onChange={(event) =>
+                    updateDraft("likedFoodNotes", event.target.value)
+                  }
                   placeholder="I usually prefer high-protein bowls, wraps, pasta, and easy chicken meals."
                   rows={4}
                   value={draft.likedFoodNotes}
@@ -809,7 +852,9 @@ export function OnboardingFlow() {
                 <TextAreaComposer
                   helperText="Foods you want the app to avoid recommending or prioritizing."
                   label="Foods to avoid"
-                  onChange={(event) => updateDraft("dislikedFoods", event.target.value)}
+                  onChange={(event) =>
+                    updateDraft("dislikedFoods", event.target.value)
+                  }
                   placeholder="Mushrooms, olives, very spicy sauces..."
                   rows={3}
                   value={draft.dislikedFoods}
@@ -828,7 +873,9 @@ export function OnboardingFlow() {
 
                 <div className="space-y-3">
                   <div className="space-y-1">
-                    <p className="text-caption text-foreground">Best days to cook</p>
+                    <p className="text-caption text-foreground">
+                      Best days to cook
+                    </p>
                     <p className="text-body text-foreground-muted">
                       Pick the days when meal prep is most realistic for you.
                     </p>
@@ -838,14 +885,16 @@ export function OnboardingFlow() {
                     selectedValues={draft.cookDays}
                   />
                   {errors.cookDays ? (
-                    <p className="text-caption text-danger">{errors.cookDays}</p>
+                    <p className="text-caption text-danger">
+                      {errors.cookDays}
+                    </p>
                   ) : null}
                 </div>
               </div>
             ) : null}
 
             {submitError ? (
-              <div className="rounded-xl bg-[hsl(var(--danger)/0.08)] px-4 py-3 text-danger">
+              <div className="text-danger rounded-xl bg-[hsl(var(--danger)/0.08)] px-4 py-3">
                 <p className="text-body">{submitError}</p>
               </div>
             ) : null}
@@ -855,14 +904,16 @@ export function OnboardingFlow() {
                 className="px-4"
                 disabled={currentStepIndex === 0 || isSubmitting}
                 icon={<ArrowLeft className="size-5" strokeWidth={2.2} />}
-                onClick={() => setCurrentStep(steps[currentStepIndex - 1]?.id ?? currentStep)}
+                onClick={() =>
+                  setCurrentStep(steps[currentStepIndex - 1]?.id ?? currentStep)
+                }
                 variant="secondary"
               >
                 Back
               </Button>
 
               <div className="flex items-center gap-4">
-                <p className="text-caption hidden text-foreground-muted sm:block">
+                <p className="text-caption text-foreground-muted hidden sm:block">
                   Step {currentStepIndex + 1} of {steps.length}
                 </p>
                 {currentStepIndex < steps.length - 1 ? (

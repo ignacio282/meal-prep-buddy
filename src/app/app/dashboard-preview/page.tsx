@@ -1,7 +1,5 @@
 import { DashboardHomePage } from "@/features/dashboard/dashboard-home-page";
-import {
-  getVeteranPreviewDashboardState,
-} from "@/features/dashboard/mock-data";
+import { getVeteranPreviewDashboardState } from "@/features/dashboard/mock-data";
 import {
   parseDashboardSearchParams,
   serializeDashboardSearchParams,
@@ -23,11 +21,13 @@ export default async function DashboardPreviewPage({
   };
   const returnToParams = new URLSearchParams();
 
-  Object.entries(serializeDashboardSearchParams(previewFilters)).forEach(([key, value]) => {
-    if (value) {
-      returnToParams.set(key, value);
-    }
-  });
+  Object.entries(serializeDashboardSearchParams(previewFilters)).forEach(
+    ([key, value]) => {
+      if (value) {
+        returnToParams.set(key, value);
+      }
+    },
+  );
 
   const returnTo = returnToParams.toString()
     ? `/app/dashboard-preview?${returnToParams.toString()}`

@@ -40,7 +40,9 @@ export function FieldGroup({
 }: FieldGroupProps) {
   return (
     <div className="space-y-1">
-      {label ? <label className="text-caption text-foreground">{label}</label> : null}
+      {label ? (
+        <label className="text-caption text-foreground">{label}</label>
+      ) : null}
       {children}
       {errorText ? (
         <p className="text-caption text-danger">{errorText}</p>

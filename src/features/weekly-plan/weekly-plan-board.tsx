@@ -106,14 +106,17 @@ export function WeeklyPlanBoard({
   });
   const [activeSlotIndex, setActiveSlotIndex] = useState<number | null>(null);
   const [checkedIngredients, setCheckedIngredients] = useState<string[]>([]);
-  const [dragOverSlotIndex, setDragOverSlotIndex] = useState<number | null>(null);
+  const [dragOverSlotIndex, setDragOverSlotIndex] = useState<number | null>(
+    null,
+  );
   const [draggingRecipeId, setDraggingRecipeId] = useState<string | null>(null);
   const [recipeSearch, setRecipeSearch] = useState("");
   const [isGroceryOpen, setIsGroceryOpen] = useState(true);
   const [isPending, startTransition] = useTransition();
 
   const recipeMap = useMemo(
-    () => new Map(availableRecipes.map((recipe) => [recipe.id, recipe] as const)),
+    () =>
+      new Map(availableRecipes.map((recipe) => [recipe.id, recipe] as const)),
     [availableRecipes],
   );
   const visibleSlots = useMemo(
@@ -122,11 +125,14 @@ export function WeeklyPlanBoard({
         .filter((slot) => slot.slotIndex < planState.mealCount)
         .map((slot) => ({
           ...slot,
-          recipe: slot.recipeId ? recipeMap.get(slot.recipeId) ?? null : null,
+          recipe: slot.recipeId ? (recipeMap.get(slot.recipeId) ?? null) : null,
         })),
     [planState, recipeMap],
   );
-  const shoppingList = useMemo(() => buildShoppingList(visibleSlots), [visibleSlots]);
+  const shoppingList = useMemo(
+    () => buildShoppingList(visibleSlots),
+    [visibleSlots],
+  );
   const visibleCheckedIngredients = checkedIngredients.filter((ingredient) =>
     shoppingList.includes(ingredient),
   );
@@ -138,7 +144,10 @@ export function WeeklyPlanBoard({
     }
 
     return availableRecipes.filter((recipe) =>
-      [recipe.title, recipe.cuisine].join(" ").toLowerCase().includes(normalizedSearch),
+      [recipe.title, recipe.cuisine]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedSearch),
     );
   }, [availableRecipes, recipeSearch]);
 
@@ -177,7 +186,9 @@ export function WeeklyPlanBoard({
     }
 
     startTransition(() => {
-      void assignWeeklyPlanSlotAction(slotIndex, recipeId).then(applyActionState);
+      void assignWeeklyPlanSlotAction(slotIndex, recipeId).then(
+        applyActionState,
+      );
     });
   }
 
@@ -219,12 +230,16 @@ export function WeeklyPlanBoard({
           <div className="space-y-1">
             <h3 className="text-title text-foreground">Saved recipes</h3>
             <p className="text-caption text-foreground-muted">
-              Search your saved recipes, then drag one into a meal slot or select a slot first.
+              Search your saved recipes, then drag one into a meal slot or
+              select a slot first.
             </p>
           </div>
 
           <label className="bg-background flex min-h-11 items-center gap-2 rounded-full px-3">
-            <Search className="text-foreground-muted size-4" strokeWidth={2.2} />
+            <Search
+              className="text-foreground-muted size-4"
+              strokeWidth={2.2}
+            />
             <input
               className="text-caption text-foreground placeholder:text-foreground-muted w-full bg-transparent outline-none"
               onChange={(event) => setRecipeSearch(event.target.value)}
@@ -246,7 +261,8 @@ export function WeeklyPlanBoard({
                 <SurfaceCard
                   className={cn(
                     "space-y-3 p-4",
-                    activeSlotIndex !== null && "border-primary/30 cursor-pointer",
+                    activeSlotIndex !== null &&
+                      "border-primary/30 cursor-pointer",
                   )}
                   draggable
                   key={recipe.id}
@@ -268,13 +284,18 @@ export function WeeklyPlanBoard({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1">
-                      <p className="text-title text-foreground">{recipe.title}</p>
+                      <p className="text-title text-foreground">
+                        {recipe.title}
+                      </p>
                       <p className="text-caption text-foreground-muted">
-                        {recipe.caloriesPerServing} cal | {recipe.proteinGrams}g protein |{" "}
-                        {recipe.prepMinutes} min
+                        {recipe.caloriesPerServing} cal | {recipe.proteinGrams}g
+                        protein | {recipe.prepMinutes} min
                       </p>
                     </div>
-                    <Grip className="text-foreground-muted size-4 shrink-0" strokeWidth={2} />
+                    <Grip
+                      className="text-foreground-muted size-4 shrink-0"
+                      strokeWidth={2}
+                    />
                   </div>
 
                   <div className="flex items-center justify-between gap-3">
@@ -320,10 +341,10 @@ export function WeeklyPlanBoard({
             return (
               <div
                 className={cn(
-                  "w-full min-h-0 flex-1 rounded-[1.5rem] border p-5 transition-colors",
+                  "min-h-0 w-full flex-1 rounded-[1.5rem] border p-5 transition-colors",
                   hasRecipe
                     ? "bg-background-light border-transparent"
-                    : "bg-background border-[hsl(var(--primary)/0.28)] border-dashed",
+                    : "bg-background border-dashed border-[hsl(var(--primary)/0.28)]",
                   active && "border-primary bg-[hsl(var(--primary)/0.06)]",
                   dragOver && "border-primary bg-[hsl(var(--primary)/0.08)]",
                 )}
@@ -339,7 +360,9 @@ export function WeeklyPlanBoard({
                 }}
                 onDrop={(event) => {
                   event.preventDefault();
-                  const recipeId = event.dataTransfer.getData("text/plain") || draggingRecipeId;
+                  const recipeId =
+                    event.dataTransfer.getData("text/plain") ||
+                    draggingRecipeId;
 
                   if (recipeId) {
                     handleDrop(slot.slotIndex, recipeId);
@@ -369,7 +392,8 @@ export function WeeklyPlanBoard({
                     {slot.recipe ? (
                       <>
                         <p className="text-caption text-foreground-muted">
-                          {slot.recipe.caloriesPerServing} cal | {slot.recipe.proteinGrams}g protein |{" "}
+                          {slot.recipe.caloriesPerServing} cal |{" "}
+                          {slot.recipe.proteinGrams}g protein |{" "}
                           {slot.recipe.prepMinutes} min
                         </p>
                         <div>
@@ -424,7 +448,8 @@ export function WeeklyPlanBoard({
             <ShoppingBasket className="text-primary size-5" strokeWidth={2} />
             <span className="text-title">What to buy</span>
             <span className="text-caption text-foreground-muted">
-              {shoppingList.length} {shoppingList.length === 1 ? "item" : "items"}
+              {shoppingList.length}{" "}
+              {shoppingList.length === 1 ? "item" : "items"}
             </span>
           </div>
           <ChevronDown
@@ -445,36 +470,43 @@ export function WeeklyPlanBoard({
             </div>
 
             {shoppingList.length === 0 ? (
-            <p className="text-caption text-foreground-muted">
-              Add at least one meal to build your shopping list.
-            </p>
-          ) : (
-            <div className="divide-background-light border-background-light overflow-hidden rounded-2xl border divide-y">
-              {shoppingList.map((ingredient) => (
-                <label className="flex items-center gap-3 px-1 py-3" key={ingredient}>
-                  <input
-                    checked={visibleCheckedIngredients.includes(ingredient)}
-                    className="accent-primary size-4"
-                    onChange={() =>
-                      setCheckedIngredients((current) =>
-                        current.includes(ingredient)
-                          ? current.filter((item) => item !== ingredient)
-                          : [...current, ingredient],
-                      )
-                    }
-                    type="checkbox"
-                  />
-                  <span className="text-body text-foreground">{ingredient}</span>
-                </label>
-              ))}
-            </div>
-          )}
+              <p className="text-caption text-foreground-muted">
+                Add at least one meal to build your shopping list.
+              </p>
+            ) : (
+              <div className="divide-background-light border-background-light divide-y overflow-hidden rounded-2xl border">
+                {shoppingList.map((ingredient) => (
+                  <label
+                    className="flex items-center gap-3 px-1 py-3"
+                    key={ingredient}
+                  >
+                    <input
+                      checked={visibleCheckedIngredients.includes(ingredient)}
+                      className="accent-primary size-4"
+                      onChange={() =>
+                        setCheckedIngredients((current) =>
+                          current.includes(ingredient)
+                            ? current.filter((item) => item !== ingredient)
+                            : [...current, ingredient],
+                        )
+                      }
+                      type="checkbox"
+                    />
+                    <span className="text-body text-foreground">
+                      {ingredient}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
           </>
         ) : null}
       </SurfaceCard>
 
       {isPending ? (
-        <p className="text-caption text-foreground-muted">Updating your weekly plan...</p>
+        <p className="text-caption text-foreground-muted">
+          Updating your weekly plan...
+        </p>
       ) : null}
     </div>
   );

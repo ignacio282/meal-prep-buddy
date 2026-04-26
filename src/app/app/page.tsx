@@ -15,7 +15,9 @@ type AppEntryPageProps = Readonly<{
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }>;
 
-export default async function AppEntryPage({ searchParams }: AppEntryPageProps) {
+export default async function AppEntryPage({
+  searchParams,
+}: AppEntryPageProps) {
   const preferences = getOnboardingPreferences();
   const redirectTarget = getAppRedirectTarget(preferences);
 
@@ -31,11 +33,13 @@ export default async function AppEntryPage({ searchParams }: AppEntryPageProps) 
   const dashboardState = getDashboardState(preferences, filters);
   const returnToParams = new URLSearchParams();
 
-  Object.entries(serializeDashboardSearchParams(filters)).forEach(([key, value]) => {
-    if (value) {
-      returnToParams.set(key, value);
-    }
-  });
+  Object.entries(serializeDashboardSearchParams(filters)).forEach(
+    ([key, value]) => {
+      if (value) {
+        returnToParams.set(key, value);
+      }
+    },
+  );
 
   const returnTo = returnToParams.toString()
     ? `/app?${returnToParams.toString()}`

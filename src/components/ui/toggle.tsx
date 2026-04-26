@@ -32,7 +32,9 @@ export function Toggle({
         aria-label={label}
         className={cn(
           "flex h-7 w-12 items-center rounded-full p-1 transition-colors duration-200",
-          checked ? "bg-primary justify-end" : "bg-surface-subtle justify-start",
+          checked
+            ? "bg-primary justify-end"
+            : "bg-surface-subtle justify-start",
         )}
         role="switch"
       >

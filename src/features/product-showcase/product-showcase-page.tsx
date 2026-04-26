@@ -99,7 +99,9 @@ export function ProductShowcasePage() {
                 Light shell, centered content, soft-surface cards, and compact
                 navigation are the base for future dashboard screens.
               </p>
-              <StatusBadge tone="highlight">Temporary design system page</StatusBadge>
+              <StatusBadge tone="highlight">
+                Temporary design system page
+              </StatusBadge>
             </SurfaceCard>
           </aside>
 
@@ -114,7 +116,9 @@ export function ProductShowcasePage() {
                 <div className="space-y-3">
                   <p className="text-caption text-foreground-muted">Default</p>
                   <div className="flex flex-wrap gap-3">
-                    <Button icon={<Sparkles className="size-5" strokeWidth={2.2} />}>
+                    <Button
+                      icon={<Sparkles className="size-5" strokeWidth={2.2} />}
+                    >
                       Primary
                     </Button>
                     <Button
@@ -169,7 +173,9 @@ export function ProductShowcasePage() {
               <SectionHeader
                 title="Form inputs"
                 description="The initial dashboard form set follows the Figma inputs and adds the minimum missing states for ingestion and preferences."
-                action={<StatusBadge tone="success">Foundation ready</StatusBadge>}
+                action={
+                  <StatusBadge tone="success">Foundation ready</StatusBadge>
+                }
               />
               <div className="grid gap-5 xl:grid-cols-2">
                 <TextField
@@ -235,7 +241,9 @@ export function ProductShowcasePage() {
               <SectionHeader
                 title="Chips and tags"
                 description="Category pills, active filters, and preference tags stay compact and reusable."
-                action={<StatusBadge tone="warning">Selected states</StatusBadge>}
+                action={
+                  <StatusBadge tone="warning">Selected states</StatusBadge>
+                }
               />
               <div className="flex flex-wrap gap-3">
                 <Chip>Asian</Chip>
@@ -251,7 +259,9 @@ export function ProductShowcasePage() {
               <SectionHeader
                 title="Cards"
                 description="Recipe cards come from Figma; supporting cards fill the minimum dashboard needs without inventing a new visual language."
-                action={<StatusBadge tone="highlight">Surface system</StatusBadge>}
+                action={
+                  <StatusBadge tone="highlight">Surface system</StatusBadge>
+                }
               />
 
               <div className="grid gap-4 xl:grid-cols-3">
@@ -321,8 +331,8 @@ export function ProductShowcasePage() {
 
               <div className="grid gap-4 xl:grid-cols-3">
                 <AlertBanner title="Recipe review needed" tone="warning">
-                  The imported recipe is missing one macro value, so it should be
-                  confirmed before it becomes a reusable library entry.
+                  The imported recipe is missing one macro value, so it should
+                  be confirmed before it becomes a reusable library entry.
                 </AlertBanner>
                 <AlertBanner title="Preferences saved" tone="success">
                   Meal prep defaults can now be reused in future recipe reviews.
@@ -348,14 +358,20 @@ export function ProductShowcasePage() {
                 <div className="space-y-4">
                   <AlertBanner title="Product entry point" tone="info">
                     The main hero CTA on the landing page now leads here so the
-                    product area has a clear, stable entry path while screens are
-                    still being built.
+                    product area has a clear, stable entry path while screens
+                    are still being built.
                   </AlertBanner>
                   <div className="bg-background-light rounded-xl p-4">
                     <div className="flex flex-wrap items-center gap-3">
-                      <StatusBadge tone="highlight">Dashboard shell</StatusBadge>
-                      <StatusBadge tone="success">Reusable components</StatusBadge>
-                      <StatusBadge tone="info">No product logic yet</StatusBadge>
+                      <StatusBadge tone="highlight">
+                        Dashboard shell
+                      </StatusBadge>
+                      <StatusBadge tone="success">
+                        Reusable components
+                      </StatusBadge>
+                      <StatusBadge tone="info">
+                        No product logic yet
+                      </StatusBadge>
                     </div>
                   </div>
                 </div>
@@ -363,7 +379,10 @@ export function ProductShowcasePage() {
                   <p className="text-title text-foreground">Flow coverage</p>
                   <div className="space-y-3">
                     <div className="text-body text-foreground flex items-center gap-3">
-                      <Settings2 className="text-primary size-5" strokeWidth={2} />
+                      <Settings2
+                        className="text-primary size-5"
+                        strokeWidth={2}
+                      />
                       <span>User setup and preferences</span>
                     </div>
                     <div className="text-body text-foreground flex items-center gap-3">
@@ -382,7 +401,10 @@ export function ProductShowcasePage() {
                       <span>Recipe details and prep metadata</span>
                     </div>
                     <div className="text-body text-foreground flex items-center gap-3">
-                      <Shuffle className="text-primary size-5" strokeWidth={2} />
+                      <Shuffle
+                        className="text-primary size-5"
+                        strokeWidth={2}
+                      />
                       <span>Random weekly recipe selection</span>
                     </div>
                   </div>

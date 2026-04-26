@@ -11,7 +11,10 @@ type StatusBadgeProps = Readonly<{
   tone?: StatusTone;
 }>;
 
-type IconComponent = ComponentType<{ className?: string; strokeWidth?: number }>;
+type IconComponent = ComponentType<{
+  className?: string;
+  strokeWidth?: number;
+}>;
 
 const toneStyles: Record<
   StatusTone,
@@ -35,10 +38,7 @@ const toneStyles: Record<
   },
 };
 
-export function StatusBadge({
-  children,
-  tone = "info",
-}: StatusBadgeProps) {
+export function StatusBadge({ children, tone = "info" }: StatusBadgeProps) {
   const { className, icon: Icon } = toneStyles[tone];
 
   return (

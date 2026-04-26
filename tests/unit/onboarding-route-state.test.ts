@@ -1,4 +1,7 @@
-import { getAppRedirectTarget, getOnboardingRedirectTarget } from "@/features/onboarding/route-state";
+import {
+  getAppRedirectTarget,
+  getOnboardingRedirectTarget,
+} from "@/features/onboarding/route-state";
 import type { UserPreferences } from "@/server/repositories/user-preferences";
 
 const preferencesFixture: UserPreferences = {

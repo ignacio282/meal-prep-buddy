@@ -90,7 +90,9 @@ describe("createRecipeAction", () => {
     expect(revalidatePathMock).toHaveBeenCalledWith("/app");
     expect(revalidatePathMock).toHaveBeenCalledWith("/app/recipes/new");
     expect(revalidatePathMock).toHaveBeenCalledWith("/app/recipes/recipe-1");
-    expect(redirectMock).toHaveBeenCalledWith("/app/recipes/recipe-1?created=1");
+    expect(redirectMock).toHaveBeenCalledWith(
+      "/app/recipes/recipe-1?created=1",
+    );
   });
 
   it("updates an existing recipe from repeated form values", async () => {
@@ -118,7 +120,9 @@ describe("createRecipeAction", () => {
       title: "Harissa Chicken Bowls",
       totalCalories: 1800,
     });
-    expect(redirectMock).toHaveBeenCalledWith("/app/recipes/recipe-1?updated=1");
+    expect(redirectMock).toHaveBeenCalledWith(
+      "/app/recipes/recipe-1?updated=1",
+    );
   });
 
   it("saves recipe notes and returns to the detail page", async () => {

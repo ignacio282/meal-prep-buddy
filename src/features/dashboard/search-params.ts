@@ -117,13 +117,16 @@ export function parseDashboardSearchParams(
     search: getValue(searchParams, "search")?.trim() ?? "",
     libraryProtein: getValue(searchParams, "libraryProtein")?.trim() ?? "",
     libraryCarbs:
-      carbLevelOptions.find((option) => option.value === getValue(searchParams, "libraryCarbs"))
-        ?.value ?? "",
+      carbLevelOptions.find(
+        (option) => option.value === getValue(searchParams, "libraryCarbs"),
+      )?.value ?? "",
     cuisine: getValue(searchParams, "cuisine")?.trim() ?? "",
     favoritesOnly: getValue(searchParams, "favorites") === "1",
     sort: isRecipeSort(sortValue) ? sortValue : "recent",
-    suggestionCuisine: getValue(searchParams, "suggestionCuisine")?.trim() ?? "",
-    suggestionProtein: getValue(searchParams, "suggestionProtein")?.trim() ?? "",
+    suggestionCuisine:
+      getValue(searchParams, "suggestionCuisine")?.trim() ?? "",
+    suggestionProtein:
+      getValue(searchParams, "suggestionProtein")?.trim() ?? "",
     suggestionDensity: isDensity(densityValue) ? densityValue : "balanced",
     effort: isEffort(effortValue) ? effortValue : "standard",
     shuffle: Number.isFinite(shuffleValue) ? shuffleValue : 0,

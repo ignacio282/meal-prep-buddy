@@ -16,9 +16,11 @@ export type WeeklyPlanActionState = {
   }>;
 };
 
-function toActionState(mealCount: number, slots: Array<{ recipeId: string | null; slotIndex: number }>): WeeklyPlanActionState {
-  const normalizedMealCount =
-    mealCount <= 1 ? 1 : mealCount >= 3 ? 3 : 2;
+function toActionState(
+  mealCount: number,
+  slots: Array<{ recipeId: string | null; slotIndex: number }>,
+): WeeklyPlanActionState {
+  const normalizedMealCount = mealCount <= 1 ? 1 : mealCount >= 3 ? 3 : 2;
 
   return {
     mealCount: normalizedMealCount,

@@ -12,14 +12,18 @@ type AlertBannerProps = Readonly<{
   tone?: AlertTone;
 }>;
 
-type IconComponent = ComponentType<{ className?: string; strokeWidth?: number }>;
+type IconComponent = ComponentType<{
+  className?: string;
+  strokeWidth?: number;
+}>;
 
 const alertToneStyles: Record<
   AlertTone,
   { className: string; icon: IconComponent }
 > = {
   info: {
-    className: "bg-[hsl(var(--info)/0.09)] text-info border-[hsl(var(--info)/0.18)]",
+    className:
+      "bg-[hsl(var(--info)/0.09)] text-info border-[hsl(var(--info)/0.18)]",
     icon: Info,
   },
   success: {

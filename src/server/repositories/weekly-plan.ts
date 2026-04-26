@@ -35,6 +35,7 @@ function normalizeMealCount(value: number): WeeklyPlanMealCount {
 }
 
 function ensureWeeklyPlan(dbClient: DatabaseClient) {
+  // This is a single-user app, so the active weekly plan is stored as one record.
   const settings = dbClient
     .select()
     .from(weeklyPlanSettings)
@@ -133,7 +134,9 @@ export function assignWeeklyPlanSlot(
 ) {
   ensureWeeklyPlan(dbClient);
 
-  if (!ALL_SLOT_INDEXES.includes(slotIndex as (typeof ALL_SLOT_INDEXES)[number])) {
+  if (
+    !ALL_SLOT_INDEXES.includes(slotIndex as (typeof ALL_SLOT_INDEXES)[number])
+  ) {
     return getWeeklyPlan(dbClient);
   }
 

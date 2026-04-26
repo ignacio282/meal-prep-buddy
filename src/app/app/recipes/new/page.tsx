@@ -27,7 +27,9 @@ function getDistinctRecipeValues(values: string[]) {
     }
   });
 
-  return [...distinctValues.values()].sort((left, right) => left.localeCompare(right));
+  return [...distinctValues.values()].sort((left, right) =>
+    left.localeCompare(right),
+  );
 }
 
 export default function NewRecipePage() {
@@ -39,7 +41,9 @@ export default function NewRecipePage() {
   }
 
   const recipes = listRecipes();
-  const existingTags = getDistinctRecipeValues(recipes.flatMap((recipe) => recipe.tags));
+  const existingTags = getDistinctRecipeValues(
+    recipes.flatMap((recipe) => recipe.tags),
+  );
   const existingIngredients = getDistinctRecipeValues(
     recipes.flatMap((recipe) => recipe.ingredients),
   );

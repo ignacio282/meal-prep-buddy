@@ -9,18 +9,13 @@ type NavItemProps = Readonly<{
   meta?: string;
 }>;
 
-export function NavItem({
-  active = false,
-  icon,
-  label,
-  meta,
-}: NavItemProps) {
+export function NavItem({ active = false, icon, label, meta }: NavItemProps) {
   return (
     <div
       className={cn(
         "flex items-center justify-between gap-3 rounded-xl px-3 py-3 transition-colors duration-200",
         active
-          ? "bg-[hsl(var(--primary)/0.12)] text-primary"
+          ? "text-primary bg-[hsl(var(--primary)/0.12)]"
           : "text-foreground-muted hover:bg-[hsl(var(--foreground)/0.03)]",
       )}
     >

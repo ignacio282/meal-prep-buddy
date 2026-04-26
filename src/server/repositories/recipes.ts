@@ -7,6 +7,7 @@ import type {
 import { db } from "@/server/db";
 import type { DatabaseClient } from "@/server/db/client";
 import { recipes } from "@/server/db/schema";
+import { parseStringArrayField } from "@/server/repositories/json-fields";
 
 type RecipeRow = typeof recipes.$inferSelect;
 
@@ -16,24 +17,12 @@ export type SavedRecipe = Omit<RecipeRow, "ingredients" | "steps" | "tags"> & {
   tags: string[];
 };
 
-function parseJsonArray(value: string): string[] {
-  try {
-    const parsed = JSON.parse(value);
-
-    return Array.isArray(parsed)
-      ? parsed.filter((item): item is string => typeof item === "string")
-      : [];
-  } catch {
-    return [];
-  }
-}
-
 function mapRowToRecipe(row: RecipeRow): SavedRecipe {
   return {
     ...row,
-    tags: parseJsonArray(row.tags),
-    ingredients: parseJsonArray(row.ingredients),
-    steps: parseJsonArray(row.steps),
+    tags: parseStringArrayField(row.tags),
+    ingredients: parseStringArrayField(row.ingredients),
+    steps: parseStringArrayField(row.steps),
   };
 }
 
@@ -156,7 +145,10 @@ export function updateRecipeNotes(
   return getRecipeById(id, dbClient);
 }
 
-export function toggleRecipeFavorite(id: string, dbClient: DatabaseClient = db) {
+export function toggleRecipeFavorite(
+  id: string,
+  dbClient: DatabaseClient = db,
+) {
   const existingRecipe = getRecipeById(id, dbClient);
 
   if (!existingRecipe) {

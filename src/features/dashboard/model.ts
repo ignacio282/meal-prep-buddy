@@ -127,11 +127,17 @@ function recipeMatchesLibraryFilters(
     return false;
   }
 
-  if (filters.libraryCarbs && getRecipeCarbLevel(recipe) !== filters.libraryCarbs) {
+  if (
+    filters.libraryCarbs &&
+    getRecipeCarbLevel(recipe) !== filters.libraryCarbs
+  ) {
     return false;
   }
 
-  if (filters.cuisine && normalize(recipe.cuisine) !== normalize(filters.cuisine)) {
+  if (
+    filters.cuisine &&
+    normalize(recipe.cuisine) !== normalize(filters.cuisine)
+  ) {
     return false;
   }
 
@@ -145,6 +151,7 @@ function recipeMatchesLibraryFilters(
 function getShuffleWeight(recipeId: string, seed: number) {
   let hash = seed + 17;
 
+  // Keep recipe suggestions stable for a given shuffle value without storing order.
   for (let index = 0; index < recipeId.length; index += 1) {
     hash = (hash * 31 + recipeId.charCodeAt(index)) % 1000003;
   }
@@ -199,14 +206,20 @@ function getSuggestedRecipes(
     return [];
   }
 
-  const availableProteins = uniqueSorted(recipes.map((recipe) => recipe.primaryProtein));
+  const availableProteins = uniqueSorted(
+    recipes.map((recipe) => recipe.primaryProtein),
+  );
   const selectedProtein =
-    filters.suggestionProtein && availableProteins.includes(filters.suggestionProtein)
+    filters.suggestionProtein &&
+    availableProteins.includes(filters.suggestionProtein)
       ? filters.suggestionProtein
       : availableProteins[0];
-  const availableCuisines = uniqueSorted(recipes.map((recipe) => recipe.cuisine));
+  const availableCuisines = uniqueSorted(
+    recipes.map((recipe) => recipe.cuisine),
+  );
   const selectedCuisine =
-    filters.suggestionCuisine && availableCuisines.includes(filters.suggestionCuisine)
+    filters.suggestionCuisine &&
+    availableCuisines.includes(filters.suggestionCuisine)
       ? filters.suggestionCuisine
       : availableCuisines[0];
 
@@ -238,7 +251,9 @@ function getSuggestedRecipes(
     filters.shuffle,
     (recipe) =>
       (normalize(recipe.cuisine) === normalize(selectedCuisine) ? 4 : 0) +
-      (getRecipeDensity(recipe, preferences) === filters.suggestionDensity ? 2 : 0) +
+      (getRecipeDensity(recipe, preferences) === filters.suggestionDensity
+        ? 2
+        : 0) +
       (getRecipeEffort(recipe) === filters.effort ? 1 : 0),
   );
 
@@ -248,8 +263,12 @@ function getSuggestedRecipes(
     ),
     filters.shuffle,
     (recipe) =>
-      (normalize(recipe.primaryProtein) === normalize(selectedProtein) ? 4 : 0) +
-      (getRecipeDensity(recipe, preferences) === filters.suggestionDensity ? 2 : 0) +
+      (normalize(recipe.primaryProtein) === normalize(selectedProtein)
+        ? 4
+        : 0) +
+      (getRecipeDensity(recipe, preferences) === filters.suggestionDensity
+        ? 2
+        : 0) +
       (getRecipeEffort(recipe) === filters.effort ? 1 : 0),
   );
 
@@ -292,9 +311,15 @@ function getSuggestedRecipes(
 }
 
 function buildFallbackWeeklyPlan(recipes: SavedRecipe[]): WeeklyPlan {
-  const plannedRecipes = recipes.filter((recipe) => recipe.plannedThisWeek).slice(0, 3);
-  const mealCount = Math.max(1, Math.min(3, plannedRecipes.length || 1)) as WeeklyPlanMealCount;
+  const plannedRecipes = recipes
+    .filter((recipe) => recipe.plannedThisWeek)
+    .slice(0, 3);
+  const mealCount = Math.max(
+    1,
+    Math.min(3, plannedRecipes.length || 1),
+  ) as WeeklyPlanMealCount;
 
+  // Older recipe toggles still feed the dashboard until a persisted plan exists.
   return {
     mealCount,
     slots: [0, 1, 2].map((slotIndex) => ({
@@ -330,13 +355,15 @@ function buildWeeklyPlanState(
   allRecipes: SavedRecipe[],
   weeklyPlan: WeeklyPlan,
 ): DashboardWeeklyPlanState {
-  const recipeMap = new Map(allRecipes.map((recipe) => [recipe.id, recipe] as const));
+  const recipeMap = new Map(
+    allRecipes.map((recipe) => [recipe.id, recipe] as const),
+  );
   const visibleSlots = weeklyPlan.slots
     .filter((slot) => slot.slotIndex < weeklyPlan.mealCount)
     .map((slot) => ({
       slotIndex: slot.slotIndex,
       recipeId: slot.recipeId,
-      recipe: slot.recipeId ? recipeMap.get(slot.recipeId) ?? null : null,
+      recipe: slot.recipeId ? (recipeMap.get(slot.recipeId) ?? null) : null,
     }));
 
   return {
@@ -352,7 +379,9 @@ function buildWeeklyPlanState(
   };
 }
 
-export function normalizeMealsPerDay(mealsPerDay: UserPreferences["mealsPerDay"]) {
+export function normalizeMealsPerDay(
+  mealsPerDay: UserPreferences["mealsPerDay"],
+) {
   return mealsPerDay === "5+" ? 5 : Number(mealsPerDay);
 }
 
@@ -414,8 +443,13 @@ export function buildDashboardState(
   const availableProteins = uniqueSorted(
     allRecipes.map((recipe) => recipe.primaryProtein),
   );
-  const availableCuisines = uniqueSorted(allRecipes.map((recipe) => recipe.cuisine));
-  const seededRecipes = sortRecipesForSuggestionSeed(allRecipes, filters.shuffle);
+  const availableCuisines = uniqueSorted(
+    allRecipes.map((recipe) => recipe.cuisine),
+  );
+  const seededRecipes = sortRecipesForSuggestionSeed(
+    allRecipes,
+    filters.shuffle,
+  );
   const defaultSuggestionRecipe = seededRecipes[0] ?? null;
   const availableSuggestionDensities = uniqueSorted(
     allRecipes.map((recipe) => getRecipeDensity(recipe, preferences)),
@@ -424,25 +458,27 @@ export function buildDashboardState(
     allRecipes.map((recipe) => getRecipeEffort(recipe)),
   ) as EffortLevel[];
   const selectedSuggestionProtein =
-    filters.suggestionProtein && availableProteins.includes(filters.suggestionProtein)
+    filters.suggestionProtein &&
+    availableProteins.includes(filters.suggestionProtein)
       ? filters.suggestionProtein
-      : defaultSuggestionRecipe?.primaryProtein ?? "";
+      : (defaultSuggestionRecipe?.primaryProtein ?? "");
   const selectedSuggestionCuisine =
-    filters.suggestionCuisine && availableCuisines.includes(filters.suggestionCuisine)
+    filters.suggestionCuisine &&
+    availableCuisines.includes(filters.suggestionCuisine)
       ? filters.suggestionCuisine
-      : defaultSuggestionRecipe?.cuisine ?? "";
-  const selectedDensity =
-    availableSuggestionDensities.includes(filters.suggestionDensity)
-      ? filters.suggestionDensity
-      : defaultSuggestionRecipe
-        ? getRecipeDensity(defaultSuggestionRecipe, preferences)
-        : "balanced";
-  const selectedEffort =
-    availableSuggestionEfforts.includes(filters.effort)
-      ? filters.effort
-      : defaultSuggestionRecipe
-        ? getRecipeEffort(defaultSuggestionRecipe)
-        : "standard";
+      : (defaultSuggestionRecipe?.cuisine ?? "");
+  const selectedDensity = availableSuggestionDensities.includes(
+    filters.suggestionDensity,
+  )
+    ? filters.suggestionDensity
+    : defaultSuggestionRecipe
+      ? getRecipeDensity(defaultSuggestionRecipe, preferences)
+      : "balanced";
+  const selectedEffort = availableSuggestionEfforts.includes(filters.effort)
+    ? filters.effort
+    : defaultSuggestionRecipe
+      ? getRecipeEffort(defaultSuggestionRecipe)
+      : "standard";
   const nextFilters = {
     ...filters,
     effort: selectedEffort,
@@ -451,10 +487,16 @@ export function buildDashboardState(
     suggestionProtein: selectedSuggestionProtein,
   };
   const filteredRecipes = sortRecipes(
-    allRecipes.filter((recipe) => recipeMatchesLibraryFilters(recipe, nextFilters)),
+    allRecipes.filter((recipe) =>
+      recipeMatchesLibraryFilters(recipe, nextFilters),
+    ),
     nextFilters.sort,
   );
-  const suggestedRecipes = getSuggestedRecipes(allRecipes, preferences, nextFilters);
+  const suggestedRecipes = getSuggestedRecipes(
+    allRecipes,
+    preferences,
+    nextFilters,
+  );
   const weeklyPlan = buildWeeklyPlanState(
     allRecipes,
     persistedWeeklyPlan ?? buildFallbackWeeklyPlan(allRecipes),

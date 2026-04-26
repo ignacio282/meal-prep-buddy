@@ -80,16 +80,26 @@ describe("DashboardHomePage", () => {
 
     render(
       <DashboardHomePage
-        dashboardState={buildDashboardState(recipes, preferencesFixture, filtersFixture)}
+        dashboardState={buildDashboardState(
+          recipes,
+          preferencesFixture,
+          filtersFixture,
+        )}
         filters={filtersFixture}
         returnTo="/app?view=library"
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "My library" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "My library" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Library" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Weekly Plan" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Randomizer" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Weekly Plan" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Randomizer" }),
+    ).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Add recipe" })).toHaveLength(1);
     expect(screen.getByText("Protein")).toBeInTheDocument();
     expect(screen.getByText("Carbs")).toBeInTheDocument();
@@ -132,13 +142,21 @@ describe("DashboardHomePage", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "What should I cook?" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "What should I cook?" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("How filling")).toBeInTheDocument();
     expect(screen.getByText("Prep time")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Shuffle recipes/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Shuffle recipes/i }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Choose your filters")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Previous/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Next/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Previous/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Next/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("renders a curated randomizer card without ingredient chips or a full-plan CTA", () => {
@@ -171,7 +189,11 @@ describe("DashboardHomePage", () => {
     expect(screen.getByText("Top choice")).toBeInTheDocument();
     expect(screen.queryByText("Extra-firm tofu")).not.toBeInTheDocument();
     expect(screen.queryByText("Weekly plan full")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Previous/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Next/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Previous/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Next/i }),
+    ).not.toBeInTheDocument();
   });
 });

@@ -32,9 +32,7 @@ import {
   type DashboardView,
 } from "@/features/dashboard/search-params";
 import { RandomizerStage } from "@/features/dashboard/randomizer-stage";
-import {
-  toggleRecipeFavoriteAction,
-} from "@/features/recipes/actions";
+import { toggleRecipeFavoriteAction } from "@/features/recipes/actions";
 import { WeeklyPlanBoard } from "@/features/weekly-plan/weekly-plan-board";
 import { cn } from "@/lib/utils/cn";
 
@@ -59,11 +57,13 @@ type FloatingMenuOption = Readonly<{
 function buildDashboardHref(basePath: string, filters: DashboardSearchFilters) {
   const params = new URLSearchParams();
 
-  Object.entries(serializeDashboardSearchParams(filters)).forEach(([key, value]) => {
-    if (value) {
-      params.set(key, value);
-    }
-  });
+  Object.entries(serializeDashboardSearchParams(filters)).forEach(
+    ([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      }
+    },
+  );
 
   const queryString = params.toString();
 
@@ -77,11 +77,13 @@ function buildRecipeHrefWithFilters(
 ) {
   const params = new URLSearchParams();
 
-  Object.entries(serializeDashboardSearchParams(filters)).forEach(([key, value]) => {
-    if (value) {
-      params.set(key, value);
-    }
-  });
+  Object.entries(serializeDashboardSearchParams(filters)).forEach(
+    ([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      }
+    },
+  );
 
   const queryString = params.toString();
 
@@ -97,10 +99,11 @@ function HiddenInputs({
   filters: DashboardSearchFilters;
   omit: string[];
 }>) {
-  return Object.entries(serializeDashboardSearchParams(filters)).map(([key, value]) =>
-    omit.includes(key) || !value ? null : (
-      <input key={key} name={key} type="hidden" value={value} />
-    ),
+  return Object.entries(serializeDashboardSearchParams(filters)).map(
+    ([key, value]) =>
+      omit.includes(key) || !value ? null : (
+        <input key={key} name={key} type="hidden" value={value} />
+      ),
   );
 }
 
@@ -193,7 +196,7 @@ function FloatingMenu({
 
       <div
         className={cn(
-          "bg-background border-background-light absolute left-0 top-full z-10 mt-2 rounded-2xl border p-2",
+          "bg-background border-background-light absolute top-full left-0 z-10 mt-2 rounded-2xl border p-2",
           widthClassName,
         )}
       >
@@ -201,14 +204,16 @@ function FloatingMenu({
           {options.map((option) => (
             <Link
               className={cn(
-                "text-caption text-foreground flex items-center justify-between gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-background-light",
+                "text-caption text-foreground hover:bg-background-light flex items-center justify-between gap-3 rounded-xl px-3 py-2 transition-colors",
                 option.selected && "bg-background-light",
               )}
               href={option.href}
               key={option.href}
             >
               <span>{option.label}</span>
-              {option.selected ? <Check className="text-primary size-4" strokeWidth={2.4} /> : null}
+              {option.selected ? (
+                <Check className="text-primary size-4" strokeWidth={2.4} />
+              ) : null}
             </Link>
           ))}
         </div>
@@ -225,11 +230,11 @@ function SearchMenu({
   return (
     <form className="group" method="get">
       <HiddenInputs filters={filters} omit={["search"]} />
-      <label className="bg-background-light border-background-light text-caption text-foreground inline-flex min-h-11 items-center gap-2 rounded-full border px-3 py-2 transition-all hover:border-[hsl(var(--primary)/0.35)] focus-within:w-[16rem] focus-within:border-[hsl(var(--primary)/0.35)]">
+      <label className="bg-background-light border-background-light text-caption text-foreground inline-flex min-h-11 items-center gap-2 rounded-full border px-3 py-2 transition-all focus-within:w-[16rem] focus-within:border-[hsl(var(--primary)/0.35)] hover:border-[hsl(var(--primary)/0.35)]">
         <Search className="text-foreground-muted size-4" strokeWidth={2.2} />
         <input
           className={cn(
-            "text-caption placeholder:text-foreground-muted bg-transparent outline-none transition-all",
+            "text-caption placeholder:text-foreground-muted bg-transparent transition-all outline-none",
             filters.search ? "w-[12rem]" : "w-0 group-focus-within:w-[12rem]",
           )}
           defaultValue={filters.search}
@@ -239,7 +244,7 @@ function SearchMenu({
         />
         <span
           className={cn(
-            "whitespace-nowrap text-foreground-muted transition-opacity group-focus-within:opacity-0",
+            "text-foreground-muted whitespace-nowrap transition-opacity group-focus-within:opacity-0",
             filters.search && "hidden",
           )}
         >
@@ -277,12 +282,17 @@ function DashboardRecipeCard({
           returnTo={returnTo}
         >
           <button
-            aria-label={recipe.favorite ? "Remove favorite" : "Save as favorite"}
+            aria-label={
+              recipe.favorite ? "Remove favorite" : "Save as favorite"
+            }
             className="text-foreground-muted hover:text-primary transition-colors"
             type="submit"
           >
             <Heart
-              className={cn("size-5", recipe.favorite && "fill-primary text-primary")}
+              className={cn(
+                "size-5",
+                recipe.favorite && "fill-primary text-primary",
+              )}
               strokeWidth={2}
             />
           </button>
@@ -290,8 +300,8 @@ function DashboardRecipeCard({
       </div>
 
       <p className="text-caption text-foreground-muted">
-        {recipe.caloriesPerServing} cal / serving | {recipe.proteinGrams}g protein |{" "}
-        {recipe.prepMinutes} min
+        {recipe.caloriesPerServing} cal / serving | {recipe.proteinGrams}g
+        protein | {recipe.prepMinutes} min
       </p>
 
       <div>
@@ -331,12 +341,20 @@ function LibraryView({
   returnTo: string;
 }>) {
   const buildLibraryHref = (nextFilters: Partial<DashboardSearchFilters>) =>
-    buildDashboardHref(basePath, { ...filters, ...nextFilters, view: "library" });
+    buildDashboardHref(basePath, {
+      ...filters,
+      ...nextFilters,
+      view: "library",
+    });
   const selectedSortLabel =
-    recipeSortOptions.find((option) => option.value === filters.sort)?.label ?? "Recently added";
+    recipeSortOptions.find((option) => option.value === filters.sort)?.label ??
+    "Recently added";
   const selectedCarbLabel =
-    carbLevelOptions.find((option) => option.value === filters.libraryCarbs)?.label ?? "";
-  const selectedCuisineLabel = filters.cuisine ? `Cuisine: ${filters.cuisine}` : "Cuisine";
+    carbLevelOptions.find((option) => option.value === filters.libraryCarbs)
+      ?.label ?? "";
+  const selectedCuisineLabel = filters.cuisine
+    ? `Cuisine: ${filters.cuisine}`
+    : "Cuisine";
   const selectedProteinLabel = filters.libraryProtein
     ? `Protein: ${filters.libraryProtein}`
     : "Protein";
@@ -344,20 +362,23 @@ function LibraryView({
     ? `Carbs: ${selectedCarbLabel}`
     : "Carbs";
   const selectedSortDisplay =
-    filters.sort === "recent" ? "Sort by: Date added" : `Sort by: ${selectedSortLabel}`;
+    filters.sort === "recent"
+      ? "Sort by: Date added"
+      : `Sort by: ${selectedSortLabel}`;
 
   return (
-    <div className="space-y-6 mt-10">
+    <div className="mt-10 space-y-6">
       <div className="space-y-2">
         <h2 className="text-foreground font-hero text-[2.6rem] leading-[1.02] font-extrabold sm:text-[3.1rem]">
           My library
         </h2>
         <p className="text-body text-foreground-muted">
-          Your saved recipes in one place. Search or filter them to find what you want to cook this
-          week.
+          Your saved recipes in one place. Search or filter them to find what
+          you want to cook this week.
         </p>
         <p className="text-caption text-foreground-muted">
-          {dashboardState.summary.savedCount} saved | {dashboardState.summary.favoriteCount} favorites
+          {dashboardState.summary.savedCount} saved |{" "}
+          {dashboardState.summary.favoriteCount} favorites
         </p>
       </div>
 
@@ -482,33 +503,36 @@ function WeeklyPlanView({
   const ingredientCount = dashboardState.weeklyPlan.shoppingList.length;
 
   return (
-    <div className="space-y-6 mt-10">
+    <div className="mt-10 space-y-6">
       <div className="space-y-2">
         <h2 className="text-foreground font-hero text-[2.6rem] leading-[1.02] font-extrabold sm:text-[3.1rem]">
           Weekly plan
         </h2>
         <p className="text-body text-foreground-muted">
-          Build your plan for the week by assigning recipes to each meal slot. The shopping list
-          updates from the meals you add here.
+          Build your plan for the week by assigning recipes to each meal slot.
+          The shopping list updates from the meals you add here.
         </p>
         <p className="text-caption text-foreground-muted">
-          {dashboardState.summary.plannedCount} in plan | {ingredientCount} ingredients to shop
+          {dashboardState.summary.plannedCount} in plan | {ingredientCount}{" "}
+          ingredients to shop
         </p>
       </div>
 
       <SurfaceCard className="space-y-6 p-6 sm:p-8">
         <WeeklyPlanBoard
-          availableRecipes={dashboardState.weeklyPlan.availableRecipes.map((recipe) => ({
-            id: recipe.id,
-            title: recipe.title,
-            caloriesPerServing: recipe.caloriesPerServing,
-            proteinGrams: recipe.proteinGrams,
-            prepMinutes: recipe.prepMinutes,
-            cuisine: recipe.cuisine,
-            ingredients: recipe.ingredients,
-            href: buildRecipeHref(recipe.id),
-            favorite: recipe.favorite,
-          }))}
+          availableRecipes={dashboardState.weeklyPlan.availableRecipes.map(
+            (recipe) => ({
+              id: recipe.id,
+              title: recipe.title,
+              caloriesPerServing: recipe.caloriesPerServing,
+              proteinGrams: recipe.proteinGrams,
+              prepMinutes: recipe.prepMinutes,
+              cuisine: recipe.cuisine,
+              ingredients: recipe.ingredients,
+              href: buildRecipeHref(recipe.id),
+              favorite: recipe.favorite,
+            }),
+          )}
           initialMealCount={dashboardState.weeklyPlan.mealCount}
           initialSlots={dashboardState.weeklyPlan.slots.map((slot) => ({
             slotIndex: slot.slotIndex,
@@ -535,13 +559,14 @@ function RandomizerView({
   filters: DashboardSearchFilters;
 }>) {
   return (
-    <div className="space-y-6 mt-10">
+    <div className="mt-10 space-y-6">
       <div className="space-y-2">
         <h2 className="text-foreground font-hero text-[2.6rem] leading-[1.02] font-extrabold sm:text-[3.1rem]">
           What should I cook?
         </h2>
         <p className="text-body text-foreground-muted">
-          Choose what kind of meal you want, then shuffle to see recipes that match your filters.
+          Choose what kind of meal you want, then shuffle to see recipes that
+          match your filters.
         </p>
         <p className="text-caption text-foreground-muted">
           {dashboardState.availableProteins.length} proteins in your library
@@ -570,18 +595,20 @@ function RandomizerView({
           selectedSuggestionCuisine={dashboardState.selectedSuggestionCuisine}
           selectedSuggestionProtein={dashboardState.selectedSuggestionProtein}
           suggestionInventory={dashboardState.suggestionInventory}
-          suggestedRecipes={dashboardState.suggestedRecipes.map((suggestion) => ({
-            id: suggestion.recipe.id,
-            title: suggestion.recipe.title,
-            href: buildRecipeHref(suggestion.recipe.id),
-            label: suggestion.label,
-            fitReason: suggestion.fitReason,
-            primaryProtein: suggestion.recipe.primaryProtein,
-            cuisine: suggestion.recipe.cuisine,
-            caloriesPerServing: suggestion.recipe.caloriesPerServing,
-            proteinGrams: suggestion.recipe.proteinGrams,
-            prepMinutes: suggestion.recipe.prepMinutes,
-          }))}
+          suggestedRecipes={dashboardState.suggestedRecipes.map(
+            (suggestion) => ({
+              id: suggestion.recipe.id,
+              title: suggestion.recipe.title,
+              href: buildRecipeHref(suggestion.recipe.id),
+              label: suggestion.label,
+              fitReason: suggestion.fitReason,
+              primaryProtein: suggestion.recipe.primaryProtein,
+              cuisine: suggestion.recipe.cuisine,
+              caloriesPerServing: suggestion.recipe.caloriesPerServing,
+              proteinGrams: suggestion.recipe.proteinGrams,
+              prepMinutes: suggestion.recipe.prepMinutes,
+            }),
+          )}
         />
       </SurfaceCard>
     </div>
@@ -601,7 +628,8 @@ export function DashboardHomePage({
 }: DashboardHomePageProps) {
   const recipeHrefBuilder =
     buildRecipeHref ??
-    ((recipeId: string) => buildRecipeHrefWithFilters(recipeId, "/app", filters));
+    ((recipeId: string) =>
+      buildRecipeHrefWithFilters(recipeId, "/app", filters));
   const buildViewHref = (view: DashboardView) =>
     buildDashboardHref(basePath, { ...filters, view });
   const clearLibraryFiltersHref = buildDashboardHref(basePath, {
@@ -635,7 +663,9 @@ export function DashboardHomePage({
             <div className="space-y-0.5">
               <p className="text-foreground text-title">Meal Prep Buddy</p>
               {previewStatus ? (
-                <p className="text-caption text-foreground-muted">{previewStatus}</p>
+                <p className="text-caption text-foreground-muted">
+                  {previewStatus}
+                </p>
               ) : null}
             </div>
           </div>
@@ -691,7 +721,10 @@ export function DashboardHomePage({
         </DashboardViewTransition>
       </div>
 
-      <DashboardFloatingNav activeView={filters.view} buildViewHref={buildViewHref} />
+      <DashboardFloatingNav
+        activeView={filters.view}
+        buildViewHref={buildViewHref}
+      />
     </main>
   );
 }

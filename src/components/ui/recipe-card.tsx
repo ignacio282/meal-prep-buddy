@@ -80,7 +80,10 @@ export function RecipeCard({
             <span>&bull;</span>
             <span>{duration}</span>
           </div>
-          <ArrowRight className="text-foreground size-5 shrink-0" strokeWidth={2.2} />
+          <ArrowRight
+            className="text-foreground size-5 shrink-0"
+            strokeWidth={2.2}
+          />
         </div>
       )}
     </SurfaceCard>

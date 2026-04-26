@@ -22,7 +22,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <SurfaceCard className="flex flex-col items-start gap-4 p-6" tone="raised">
-      <div className="bg-[hsl(var(--primary)/0.12)] text-primary rounded-full p-3">
+      <div className="text-primary rounded-full bg-[hsl(var(--primary)/0.12)] p-3">
         {icon}
       </div>
       <div className="space-y-1">

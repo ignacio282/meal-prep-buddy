@@ -32,10 +32,7 @@ export const createRecipeSchema = z.object({
   tags: z.array(z.string().trim().min(1).max(30)).max(8),
   ingredients: z.array(z.string().trim().min(1).max(200)).min(1).max(40),
   steps: z.array(z.string().trim().min(1).max(400)).min(1).max(20),
-  notes: z.preprocess(
-    emptyToUndefined,
-    z.string().trim().max(1200).optional(),
-  ),
+  notes: z.preprocess(emptyToUndefined, z.string().trim().max(1200).optional()),
 });
 
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;

@@ -9,9 +9,13 @@ describe("AppDesignSystemPage", () => {
     render(<AppDesignSystemPage />);
 
     expect(
-      screen.getByRole("heading", { name: "Meal Prep Buddy /app/design-system" }),
+      screen.getByRole("heading", {
+        name: "Meal Prep Buddy /app/design-system",
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Buttons" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Buttons" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Form inputs" }),
     ).toBeInTheDocument();

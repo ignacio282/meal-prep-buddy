@@ -10,14 +10,18 @@ type ChipProps = Readonly<{
   selected?: boolean;
 }>;
 
-export function Chip({ children, removable = false, selected = false }: ChipProps) {
+export function Chip({
+  children,
+  removable = false,
+  selected = false,
+}: ChipProps) {
   return (
     <span
       className={cn(
         "text-caption inline-flex min-h-9 items-center gap-2 rounded-full px-3 py-2 transition-colors duration-200",
         selected
-          ? "bg-[hsl(var(--primary)/0.12)] text-primary"
-          : "bg-[hsl(var(--info)/0.12)] text-foreground-muted",
+          ? "text-primary bg-[hsl(var(--primary)/0.12)]"
+          : "text-foreground-muted bg-[hsl(var(--info)/0.12)]",
       )}
     >
       <span>{children}</span>

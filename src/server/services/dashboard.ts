@@ -11,5 +11,10 @@ export function getDashboardState(
   preferences: UserPreferences,
   filters: DashboardSearchFilters,
 ): DashboardState {
-  return buildDashboardState(listRecipes(), preferences, filters, getWeeklyPlan());
+  return buildDashboardState(
+    listRecipes(),
+    preferences,
+    filters,
+    getWeeklyPlan(),
+  );
 }

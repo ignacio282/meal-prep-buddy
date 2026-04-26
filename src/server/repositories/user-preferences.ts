@@ -5,6 +5,7 @@ import type { OnboardingPreferencesInput } from "@/features/onboarding/schema";
 import { db } from "@/server/db";
 import type { DatabaseClient } from "@/server/db/client";
 import { userPreferences } from "@/server/db/schema";
+import { parseStringArrayField } from "@/server/repositories/json-fields";
 
 type UserPreferencesRow = typeof userPreferences.$inferSelect;
 
@@ -16,23 +17,11 @@ export type UserPreferences = Omit<
   cookDays: string[];
 };
 
-function parseJsonArray(value: string): string[] {
-  try {
-    const parsed = JSON.parse(value);
-
-    return Array.isArray(parsed)
-      ? parsed.filter((item): item is string => typeof item === "string")
-      : [];
-  } catch {
-    return [];
-  }
-}
-
 function mapRowToPreferences(row: UserPreferencesRow): UserPreferences {
   return {
     ...row,
-    likedFoodTags: parseJsonArray(row.likedFoodTags),
-    cookDays: parseJsonArray(row.cookDays),
+    likedFoodTags: parseStringArrayField(row.likedFoodTags),
+    cookDays: parseStringArrayField(row.cookDays),
   };
 }
 

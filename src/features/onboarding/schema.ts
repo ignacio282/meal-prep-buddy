@@ -37,7 +37,10 @@ export const onboardingProfileSchema = z
     age: z.coerce.number().int().min(13).max(100),
     sex: z.enum(sexValues),
     heightUnit: z.enum(heightUnitValues),
-    heightFeet: z.preprocess(emptyToUndefined, z.coerce.number().int().min(3).max(8).optional()),
+    heightFeet: z.preprocess(
+      emptyToUndefined,
+      z.coerce.number().int().min(3).max(8).optional(),
+    ),
     heightInches: z.preprocess(
       emptyToUndefined,
       z.coerce.number().int().min(0).max(11).optional(),
@@ -69,7 +72,10 @@ export const onboardingProfileSchema = z
       }
     }
 
-    if (value.heightUnit === "metric" && value.heightCentimeters === undefined) {
+    if (
+      value.heightUnit === "metric" &&
+      value.heightCentimeters === undefined
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Height in centimeters is required.",
@@ -96,7 +102,9 @@ export const onboardingPreferencesSchema = onboardingProfileSchema
   .merge(onboardingMealPrepSchema);
 
 export type OnboardingProfileInput = z.infer<typeof onboardingProfileSchema>;
-export type OnboardingNutritionInput = z.infer<typeof onboardingNutritionSchema>;
+export type OnboardingNutritionInput = z.infer<
+  typeof onboardingNutritionSchema
+>;
 export type OnboardingMealPrepInput = z.infer<typeof onboardingMealPrepSchema>;
 export type OnboardingPreferencesInput = z.infer<
   typeof onboardingPreferencesSchema

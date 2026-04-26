@@ -100,11 +100,13 @@ export default async function RecipeDetailPage({
       : getDashboardState(preferences, filters);
   const detailParams = new URLSearchParams();
 
-  Object.entries(serializeDashboardSearchParams(filters)).forEach(([key, value]) => {
-    if (value) {
-      detailParams.set(key, value);
-    }
-  });
+  Object.entries(serializeDashboardSearchParams(filters)).forEach(
+    ([key, value]) => {
+      if (value) {
+        detailParams.set(key, value);
+      }
+    },
+  );
 
   if (previewMode === "veteran") {
     detailParams.set("preview", "veteran");
@@ -122,7 +124,8 @@ export default async function RecipeDetailPage({
   const dashboardHref = dashboardParams.toString()
     ? `${dashboardBasePath}?${dashboardParams.toString()}`
     : dashboardBasePath;
-  const recipeInWeeklyPlan = dashboardState.weeklyPlan.assignedRecipeIds.includes(recipe.id);
+  const recipeInWeeklyPlan =
+    dashboardState.weeklyPlan.assignedRecipeIds.includes(recipe.id);
   const weeklyPlanFull =
     !recipeInWeeklyPlan && !dashboardState.weeklyPlan.hasOpenSlot;
   const wasJustCreated =
@@ -182,14 +185,17 @@ export default async function RecipeDetailPage({
 
         {wasJustCreated ? (
           <SurfaceCard className="p-4" tone="raised">
-            <div className="bg-[hsl(var(--success)/0.09)] text-success border-[hsl(var(--success)/0.18)] rounded-xl border px-4 py-3">
+            <div className="text-success rounded-xl border border-[hsl(var(--success)/0.18)] bg-[hsl(var(--success)/0.09)] px-4 py-3">
               <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 size-5 shrink-0" strokeWidth={2.2} />
+                <CheckCircle2
+                  className="mt-0.5 size-5 shrink-0"
+                  strokeWidth={2.2}
+                />
                 <div className="space-y-1">
                   <p className="text-title">Recipe saved</p>
                   <p className="text-caption">
-                    You can now find it in your library, add it to your weekly plan, or use it in
-                    recipe suggestions.
+                    You can now find it in your library, add it to your weekly
+                    plan, or use it in recipe suggestions.
                   </p>
                 </div>
               </div>
@@ -215,33 +221,45 @@ export default async function RecipeDetailPage({
             <div className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <SurfaceCard className="space-y-1 p-4" tone="raised">
-                  <p className="text-caption text-foreground-muted">Per serving</p>
-                  <p className="text-title text-foreground">{recipe.caloriesPerServing} cal</p>
+                  <p className="text-caption text-foreground-muted">
+                    Per serving
+                  </p>
+                  <p className="text-title text-foreground">
+                    {recipe.caloriesPerServing} cal
+                  </p>
                 </SurfaceCard>
                 <SurfaceCard className="space-y-1 p-4" tone="raised">
                   <p className="text-caption text-foreground-muted">Protein</p>
-                  <p className="text-title text-foreground">{recipe.proteinGrams}g</p>
+                  <p className="text-title text-foreground">
+                    {recipe.proteinGrams}g
+                  </p>
                 </SurfaceCard>
                 <SurfaceCard className="space-y-1 p-4" tone="raised">
-                  <p className="text-caption text-foreground-muted">Prep time</p>
-                  <p className="text-title text-foreground">{recipe.prepMinutes} min</p>
+                  <p className="text-caption text-foreground-muted">
+                    Prep time
+                  </p>
+                  <p className="text-title text-foreground">
+                    {recipe.prepMinutes} min
+                  </p>
                 </SurfaceCard>
                 <SurfaceCard className="space-y-1 p-4" tone="raised">
                   <p className="text-caption text-foreground-muted">Servings</p>
-                  <p className="text-title text-foreground">{recipe.servings}</p>
+                  <p className="text-title text-foreground">
+                    {recipe.servings}
+                  </p>
                 </SurfaceCard>
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <span className="text-caption inline-flex min-h-9 items-center rounded-full bg-[hsl(var(--primary)/0.12)] px-3 py-2 text-primary">
+                <span className="text-caption text-primary inline-flex min-h-9 items-center rounded-full bg-[hsl(var(--primary)/0.12)] px-3 py-2">
                   {recipe.cuisine}
                 </span>
-                <span className="text-caption inline-flex min-h-9 items-center rounded-full bg-[hsl(var(--primary)/0.12)] px-3 py-2 text-primary">
+                <span className="text-caption text-primary inline-flex min-h-9 items-center rounded-full bg-[hsl(var(--primary)/0.12)] px-3 py-2">
                   {recipe.primaryProtein}
                 </span>
                 {recipe.tags.map((tag) => (
                   <span
-                    className="text-caption inline-flex min-h-9 items-center rounded-full bg-[hsl(var(--primary)/0.12)] px-3 py-2 text-primary"
+                    className="text-caption text-primary inline-flex min-h-9 items-center rounded-full bg-[hsl(var(--primary)/0.12)] px-3 py-2"
                     key={tag}
                   >
                     {tag}
@@ -276,8 +294,12 @@ export default async function RecipeDetailPage({
               </div>
               <div className="space-y-3">
                 {recipe.steps.map((step, index) => (
-                  <SurfaceCard key={`${recipe.id}-step-${index + 1}`} className="flex gap-3 p-4" tone="raised">
-                    <span className="bg-[hsl(var(--primary)/0.12)] text-primary flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                  <SurfaceCard
+                    key={`${recipe.id}-step-${index + 1}`}
+                    className="flex gap-3 p-4"
+                    tone="raised"
+                  >
+                    <span className="text-primary flex size-8 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--primary)/0.12)] text-sm font-semibold">
                       {index + 1}
                     </span>
                     <p className="text-body text-foreground">{step}</p>
@@ -287,10 +309,16 @@ export default async function RecipeDetailPage({
             </div>
           </SurfaceCard>
 
-          <SurfaceCard className="flex h-full flex-col gap-5 p-6 sm:p-8" id="groceries">
+          <SurfaceCard
+            className="flex h-full flex-col gap-5 p-6 sm:p-8"
+            id="groceries"
+          >
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <ShoppingBasket className="text-primary size-5" strokeWidth={2} />
+                <ShoppingBasket
+                  className="text-primary size-5"
+                  strokeWidth={2}
+                />
                 <h2 className="text-h2 text-foreground">What to buy</h2>
               </div>
               <p className="text-body text-foreground-muted">
@@ -305,7 +333,9 @@ export default async function RecipeDetailPage({
                   className="bg-background-light flex items-center gap-3 rounded-xl px-4 py-3"
                 >
                   <input className="accent-primary size-4" type="checkbox" />
-                  <span className="text-body text-foreground">{ingredient}</span>
+                  <span className="text-body text-foreground">
+                    {ingredient}
+                  </span>
                 </label>
               ))}
             </div>
@@ -324,7 +354,7 @@ export default async function RecipeDetailPage({
               <input name="recipeId" type="hidden" value={recipe.id} />
               <input name="returnTo" type="hidden" value={returnTo} />
               <textarea
-                className="text-body bg-background-light placeholder:text-foreground-muted min-h-32 w-full resize-y rounded-xl px-4 py-3 text-foreground outline-none transition-colors duration-200 hover:bg-surface focus:bg-surface focus:ring-0"
+                className="text-body bg-background-light placeholder:text-foreground-muted text-foreground hover:bg-surface focus:bg-surface min-h-32 w-full resize-y rounded-xl px-4 py-3 transition-colors duration-200 outline-none focus:ring-0"
                 defaultValue={recipe.notes ?? ""}
                 maxLength={1200}
                 name="notes"

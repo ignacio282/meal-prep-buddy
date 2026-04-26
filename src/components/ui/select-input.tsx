@@ -15,7 +15,10 @@ type SelectOption = {
   value: string;
 };
 
-type SelectInputProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, "size"> & {
+type SelectInputProps = Omit<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  "size"
+> & {
   errorText?: string;
   helperText?: string;
   label?: string;
@@ -56,7 +59,10 @@ export function SelectInput({
             </option>
           ))}
         </select>
-        <ChevronDown className="text-foreground size-5 shrink-0" strokeWidth={2} />
+        <ChevronDown
+          className="text-foreground size-5 shrink-0"
+          strokeWidth={2}
+        />
       </div>
     </FieldGroup>
   );

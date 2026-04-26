@@ -27,7 +27,10 @@ export function SearchField({
   return (
     <FieldGroup helperText={helperText} label={label}>
       <div className={fieldChromeClassName({ disabled, visualState })}>
-        <Search className="text-foreground mr-2 size-5 shrink-0" strokeWidth={2} />
+        <Search
+          className="text-foreground mr-2 size-5 shrink-0"
+          strokeWidth={2}
+        />
         <input
           className={cn(
             "text-body placeholder:text-foreground-muted w-full bg-transparent outline-none",

@@ -177,13 +177,7 @@ export const veteranPreviewRecipes: SavedRecipe[] = [
     servings: 4,
     prepMinutes: 28,
     tags: ["Quick", "Lunch", "Cold friendly"],
-    ingredients: [
-      "Ground turkey",
-      "Orzo",
-      "Spinach",
-      "Pesto",
-      "Parmesan",
-    ],
+    ingredients: ["Ground turkey", "Orzo", "Spinach", "Pesto", "Parmesan"],
     steps: [
       "Cook the turkey and season lightly.",
       "Boil the orzo and toss with pesto and spinach.",
@@ -277,13 +271,7 @@ export const veteranPreviewRecipes: SavedRecipe[] = [
     servings: 4,
     prepMinutes: 44,
     tags: ["Freezer", "Lunch", "High protein"],
-    ingredients: [
-      "Ground chicken",
-      "Panko",
-      "Ginger",
-      "Rice",
-      "Snap peas",
-    ],
+    ingredients: ["Ground chicken", "Panko", "Ginger", "Rice", "Snap peas"],
     steps: [
       "Bake the ginger chicken meatballs.",
       "Steam the snap peas and cook the rice.",
@@ -351,7 +339,9 @@ export const veteranPreviewWeeklyPlan: WeeklyPlan = {
   ],
 };
 
-export function getVeteranPreviewDashboardState(filters: DashboardSearchFilters) {
+export function getVeteranPreviewDashboardState(
+  filters: DashboardSearchFilters,
+) {
   return buildDashboardState(
     veteranPreviewRecipes,
     veteranPreviewPreferences,

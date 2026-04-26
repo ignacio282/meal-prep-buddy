@@ -35,8 +35,8 @@ function revalidateRecipePaths(recipeId?: string) {
   }
 }
 
-export async function createRecipeAction(formData: FormData) {
-  const parsedInput = createRecipeSchema.parse({
+function parseRecipeFormData(formData: FormData) {
+  return createRecipeSchema.parse({
     title: getRequiredString(formData, "title"),
     sourceUrl: getRequiredString(formData, "sourceUrl"),
     sourceLabel: getRequiredString(formData, "sourceLabel"),
@@ -54,6 +54,10 @@ export async function createRecipeAction(formData: FormData) {
     steps: getStringValues(formData, "steps"),
     notes: getRequiredString(formData, "notes"),
   });
+}
+
+export async function createRecipeAction(formData: FormData) {
+  const parsedInput = parseRecipeFormData(formData);
   const recipe = createRecipe(parsedInput);
 
   revalidateRecipePaths(recipe.id);
@@ -62,24 +66,7 @@ export async function createRecipeAction(formData: FormData) {
 
 export async function updateRecipeAction(formData: FormData) {
   const recipeId = getRequiredString(formData, "recipeId");
-  const parsedInput = createRecipeSchema.parse({
-    title: getRequiredString(formData, "title"),
-    sourceUrl: getRequiredString(formData, "sourceUrl"),
-    sourceLabel: getRequiredString(formData, "sourceLabel"),
-    primaryProtein: getRequiredString(formData, "primaryProtein"),
-    cuisine: getRequiredString(formData, "cuisine"),
-    totalCalories: getRequiredString(formData, "totalCalories"),
-    caloriesPerServing: getRequiredString(formData, "caloriesPerServing"),
-    proteinGrams: getRequiredString(formData, "proteinGrams"),
-    carbGrams: getRequiredString(formData, "carbGrams"),
-    fatGrams: getRequiredString(formData, "fatGrams"),
-    servings: getRequiredString(formData, "servings"),
-    prepMinutes: getRequiredString(formData, "prepMinutes"),
-    tags: getStringValues(formData, "tags"),
-    ingredients: getStringValues(formData, "ingredients"),
-    steps: getStringValues(formData, "steps"),
-    notes: getRequiredString(formData, "notes"),
-  });
+  const parsedInput = parseRecipeFormData(formData);
   const recipe = updateRecipe(recipeId, parsedInput);
 
   revalidateRecipePaths(recipeId);
@@ -88,7 +75,8 @@ export async function updateRecipeAction(formData: FormData) {
 
 export async function updateRecipeNotesAction(formData: FormData) {
   const recipeId = getRequiredString(formData, "recipeId");
-  const returnTo = getRequiredString(formData, "returnTo") || `/app/recipes/${recipeId}`;
+  const returnTo =
+    getRequiredString(formData, "returnTo") || `/app/recipes/${recipeId}`;
   const rawNotes = getRequiredString(formData, "notes").trim();
   const notes = rawNotes.length > 0 ? rawNotes : null;
 
