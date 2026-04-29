@@ -23,6 +23,7 @@ type SelectInputProps = Omit<
   helperText?: string;
   label?: string;
   options: SelectOption[];
+  placeholder?: string;
   visualState?: FieldVisualState;
 };
 
@@ -33,6 +34,7 @@ export function SelectInput({
   helperText,
   label,
   options,
+  placeholder,
   visualState = "default",
   ...props
 }: SelectInputProps) {
@@ -53,6 +55,11 @@ export function SelectInput({
           disabled={disabled}
           {...props}
         >
+          {placeholder ? (
+            <option disabled value="">
+              {placeholder}
+            </option>
+          ) : null}
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

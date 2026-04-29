@@ -15,6 +15,10 @@ const cuisineOptions = [
 ];
 
 describe("NewRecipeFormFields", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("filters existing tag suggestions and adds a selected tag", () => {
     const { container } = render(
       <NewRecipeFormFields
@@ -177,5 +181,101 @@ describe("NewRecipeFormFields", () => {
     ).not.toBeInTheDocument();
     expect(ingredientInputs).toHaveLength(0);
     expect(stepInputs).toHaveLength(0);
+  });
+
+  it("opens the AI import panel and applies a parsed draft to the recipe form", async () => {
+    const parsedRecipe = {
+      confidenceNotes: ["Macros were included in the pasted recipe."],
+      draft: {
+        caloriesPerServing: 450,
+        carbGrams: 42,
+        cuisine: "Mediterranean",
+        fatGrams: 14,
+        ingredients: ["Chicken breast", "Cooked rice"],
+        notes: null,
+        prepMinutes: 35,
+        primaryProtein: "Chicken",
+        proteinGrams: 38,
+        servings: 4,
+        sourceUrl: "https://example.com/harissa",
+        steps: ["Season the chicken.", "Portion into containers."],
+        tags: ["High protein", "Meal prep"],
+        title: "Harissa Chicken Bowls",
+        totalCalories: 1800,
+      },
+      questions: ["Confirm whether the rice is measured cooked."],
+    };
+    const fetchMock = vi.fn(async () => ({
+      json: async () => parsedRecipe,
+      ok: true,
+    }));
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { container } = render(
+      <NewRecipeFormFields
+        cuisineOptions={cuisineOptions}
+        existingIngredients={["Chicken breast", "Cooked rice"]}
+        existingTags={["High protein", "Meal prep"]}
+        proteinOptions={proteinOptions}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Try AI import" }));
+
+    fireEvent.change(
+      screen.getByPlaceholderText(
+        "Paste the recipe, notes, ingredients, steps, and any nutrition details you trust.",
+      ),
+      {
+        target: {
+          value:
+            "Harissa chicken bowls with cooked rice, four servings, 450 calories per serving, 38 grams protein.",
+        },
+      },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Send to AI" }));
+
+    expect(await screen.findByText("Extracted draft")).toBeInTheDocument();
+    expect(
+      screen.getByText("Confirm whether the rice is measured cooked."),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply draft" }));
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(container.querySelector('input[name="title"]')).toHaveValue(
+      "Harissa Chicken Bowls",
+    );
+    expect(container.querySelector('input[name="sourceUrl"]')).toHaveValue(
+      "https://example.com/harissa",
+    );
+    expect(container.querySelector('select[name="primaryProtein"]')).toHaveValue(
+      "Chicken",
+    );
+    expect(container.querySelector('select[name="cuisine"]')).toHaveValue(
+      "Mediterranean",
+    );
+    expect(container.querySelector('input[name="caloriesPerServing"]'))
+      .toHaveValue(450);
+
+    expect(
+      screen.getByRole("button", { name: "Remove tag High protein" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Remove ingredient Cooked rice" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Season the chicken.")).toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Remove ingredient Cooked rice" }),
+    );
+
+    const ingredientInputs = container.querySelectorAll(
+      'input[type="hidden"][name="ingredients"]',
+    );
+
+    expect(ingredientInputs).toHaveLength(1);
+    expect(ingredientInputs[0]).toHaveValue("Chicken breast");
   });
 });
