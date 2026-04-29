@@ -10,6 +10,8 @@ import { SearchField } from "@/components/ui/search-field";
 import { SelectInput } from "@/components/ui/select-input";
 import { SurfaceCard } from "@/components/ui/surface-card";
 import { TextField } from "@/components/ui/text-field";
+import { AiRecipeImportPanel } from "@/features/recipes/ai-recipe-import-panel";
+import type { AiRecipeDraft } from "@/features/recipes/ai-ingestion-schema";
 
 type SelectOption = Readonly<{
   label: string;
@@ -26,24 +28,113 @@ type NewRecipeFormFieldsProps = Readonly<{
 }>;
 
 export type RecipeFormInitialValues = Readonly<{
-  caloriesPerServing: number;
-  carbGrams: number;
-  cuisine: string;
-  fatGrams: number;
-  ingredients: string[];
-  prepMinutes: number;
-  primaryProtein: string;
-  proteinGrams: number;
-  servings: number;
+  caloriesPerServing?: number;
+  carbGrams?: number;
+  cuisine?: string;
+  fatGrams?: number;
+  ingredients?: string[];
+  prepMinutes?: number;
+  primaryProtein?: string;
+  proteinGrams?: number;
+  servings?: number;
   sourceUrl: string | null;
-  steps: string[];
-  tags: string[];
+  steps?: string[];
+  tags?: string[];
+  title?: string;
+  totalCalories?: number;
+}>;
+
+type RecipeScalarFormValues = Readonly<{
+  caloriesPerServing: string;
+  carbGrams: string;
+  cuisine: string;
+  fatGrams: string;
+  prepMinutes: string;
+  primaryProtein: string;
+  proteinGrams: string;
+  servings: string;
+  sourceUrl: string;
   title: string;
-  totalCalories: number;
+  totalCalories: string;
 }>;
 
 function normalizeInputValue(value: string) {
   return value.trim().replace(/\s+/g, " ");
+}
+
+function formatOptionalNumber(value: number | undefined) {
+  return typeof value === "number" ? String(value) : "";
+}
+
+function getInitialScalarValues(
+  initialValues: RecipeFormInitialValues | undefined,
+): RecipeScalarFormValues {
+  return {
+    caloriesPerServing: formatOptionalNumber(
+      initialValues?.caloriesPerServing,
+    ),
+    carbGrams: formatOptionalNumber(initialValues?.carbGrams),
+    cuisine: initialValues?.cuisine ?? "",
+    fatGrams: formatOptionalNumber(initialValues?.fatGrams),
+    prepMinutes: formatOptionalNumber(initialValues?.prepMinutes),
+    primaryProtein: initialValues?.primaryProtein ?? "",
+    proteinGrams: formatOptionalNumber(initialValues?.proteinGrams),
+    servings: formatOptionalNumber(initialValues?.servings),
+    sourceUrl: initialValues?.sourceUrl ?? "",
+    title: initialValues?.title ?? "",
+    totalCalories: formatOptionalNumber(initialValues?.totalCalories),
+  };
+}
+
+function formatNullableNumber(value: number | null) {
+  return value === null ? "" : String(value);
+}
+
+function normalizeDraftList(values: string[], maxItems: number) {
+  const normalizedValues = new Map<string, string>();
+
+  values.forEach((value) => {
+    const normalizedValue = normalizeInputValue(value);
+
+    if (!normalizedValue) {
+      return;
+    }
+
+    const normalizedKey = normalizedValue.toLowerCase();
+
+    if (!normalizedValues.has(normalizedKey)) {
+      normalizedValues.set(normalizedKey, normalizedValue);
+    }
+  });
+
+  return [...normalizedValues.values()].slice(0, maxItems);
+}
+
+function normalizeDraftSelectValue(
+  value: string | null,
+  options: ReadonlyArray<SelectOption>,
+) {
+  if (!value) {
+    return "Other";
+  }
+
+  const matchingOption = options.find(
+    (option) => option.value.toLowerCase() === value.toLowerCase(),
+  );
+
+  return matchingOption?.value ?? "Other";
+}
+
+function normalizeDraftUrl(value: string | null) {
+  if (!value) {
+    return "";
+  }
+
+  try {
+    return new URL(value).toString();
+  } catch {
+    return "";
+  }
 }
 
 function hasCaseInsensitiveMatch(
@@ -142,6 +233,9 @@ export function NewRecipeFormFields({
   proteinOptions,
   submitLabel = "Save recipe",
 }: NewRecipeFormFieldsProps) {
+  const [formValues, setFormValues] = useState(() =>
+    getInitialScalarValues(initialValues),
+  );
   const [tagQuery, setTagQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>(
     initialValues?.tags ?? [],
@@ -174,6 +268,41 @@ export function NewRecipeFormFields({
     normalizedIngredientQuery.length > 0 &&
     visibleIngredientSuggestions.length === 0 &&
     !hasCaseInsensitiveMatch(selectedIngredients, normalizedIngredientQuery);
+
+  function updateFormValue(
+    key: keyof RecipeScalarFormValues,
+    value: string,
+  ) {
+    setFormValues((currentValues) => ({
+      ...currentValues,
+      [key]: value,
+    }));
+  }
+
+  function applyAiDraft(draft: AiRecipeDraft) {
+    setFormValues({
+      caloriesPerServing: formatNullableNumber(draft.caloriesPerServing),
+      carbGrams: formatNullableNumber(draft.carbGrams),
+      cuisine: normalizeDraftSelectValue(draft.cuisine, cuisineOptions),
+      fatGrams: formatNullableNumber(draft.fatGrams),
+      prepMinutes: formatNullableNumber(draft.prepMinutes),
+      primaryProtein: normalizeDraftSelectValue(
+        draft.primaryProtein,
+        proteinOptions,
+      ),
+      proteinGrams: formatNullableNumber(draft.proteinGrams),
+      servings: formatNullableNumber(draft.servings),
+      sourceUrl: normalizeDraftUrl(draft.sourceUrl),
+      title: draft.title ?? "",
+      totalCalories: formatNullableNumber(draft.totalCalories),
+    });
+    setSelectedTags(normalizeDraftList(draft.tags, 8));
+    setSelectedIngredients(normalizeDraftList(draft.ingredients, 40));
+    setSteps(normalizeDraftList(draft.steps, 20));
+    setTagQuery("");
+    setIngredientQuery("");
+    setStepInput("");
+  }
 
   function addTag(value: string) {
     const normalizedValue = normalizeInputValue(value);
@@ -221,6 +350,8 @@ export function NewRecipeFormFields({
 
   return (
     <>
+      <AiRecipeImportPanel onApplyDraft={applyAiDraft} />
+
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <SurfaceCard className="flex h-full flex-col gap-6 p-6 sm:p-8">
           <div className="space-y-1">
@@ -232,19 +363,23 @@ export function NewRecipeFormFields({
 
           <div className="grid gap-5 lg:grid-cols-2">
             <TextField
-              defaultValue={initialValues?.title}
               label="Recipe title"
               name="title"
+              onChange={(event) => updateFormValue("title", event.target.value)}
               placeholder="Grilled chicken rice bowls"
               required
+              value={formValues.title}
             />
             <TextField
-              defaultValue={initialValues?.sourceUrl ?? undefined}
               helperText="Optional."
               label="Source URL"
               name="sourceUrl"
+              onChange={(event) =>
+                updateFormValue("sourceUrl", event.target.value)
+              }
               placeholder="https://example.com/recipe"
               type="url"
+              value={formValues.sourceUrl}
             />
             <div className="space-y-4 lg:col-span-2">
               <SearchField
@@ -319,81 +454,110 @@ export function NewRecipeFormFields({
 
           <div className="grid gap-5 md:grid-cols-2">
             <SelectInput
-              defaultValue={initialValues?.primaryProtein}
               label="Primary protein"
               name="primaryProtein"
+              onChange={(event) =>
+                updateFormValue("primaryProtein", event.target.value)
+              }
               options={[...proteinOptions]}
+              placeholder="Choose protein"
               required
+              value={formValues.primaryProtein}
             />
             <SelectInput
-              defaultValue={initialValues?.cuisine}
               label="Cuisine"
               name="cuisine"
+              onChange={(event) =>
+                updateFormValue("cuisine", event.target.value)
+              }
               options={[...cuisineOptions]}
+              placeholder="Choose cuisine"
               required
+              value={formValues.cuisine}
             />
             <TextField
-              defaultValue={initialValues?.prepMinutes}
               label="Prep time (minutes)"
               min={1}
               name="prepMinutes"
+              onChange={(event) =>
+                updateFormValue("prepMinutes", event.target.value)
+              }
               placeholder="35"
               required
               type="number"
+              value={formValues.prepMinutes}
             />
             <TextField
-              defaultValue={initialValues?.servings}
               label="Servings"
               min={1}
               name="servings"
+              onChange={(event) =>
+                updateFormValue("servings", event.target.value)
+              }
               placeholder="4"
               required
               type="number"
+              value={formValues.servings}
             />
             <TextField
-              defaultValue={initialValues?.totalCalories}
               label="Total calories"
               min={1}
               name="totalCalories"
+              onChange={(event) =>
+                updateFormValue("totalCalories", event.target.value)
+              }
               placeholder="1800"
               required
               type="number"
+              value={formValues.totalCalories}
             />
             <TextField
-              defaultValue={initialValues?.caloriesPerServing}
               label="Calories per serving"
               min={1}
               name="caloriesPerServing"
+              onChange={(event) =>
+                updateFormValue("caloriesPerServing", event.target.value)
+              }
               placeholder="450"
               required
               type="number"
+              value={formValues.caloriesPerServing}
             />
             <TextField
-              defaultValue={initialValues?.proteinGrams}
               label="Protein per serving (g)"
               min={1}
               name="proteinGrams"
+              onChange={(event) =>
+                updateFormValue("proteinGrams", event.target.value)
+              }
               placeholder="38"
               required
               type="number"
+              value={formValues.proteinGrams}
             />
             <TextField
-              defaultValue={initialValues?.carbGrams}
               label="Carbs per serving (g)"
               min={1}
               name="carbGrams"
+              onChange={(event) =>
+                updateFormValue("carbGrams", event.target.value)
+              }
               placeholder="42"
               required
               type="number"
+              value={formValues.carbGrams}
             />
             <TextField
-              defaultValue={initialValues?.fatGrams}
               label="Fat per serving (g)"
               min={1}
               name="fatGrams"
+              onChange={(event) =>
+                updateFormValue("fatGrams", event.target.value)
+              }
               placeholder="14"
               required
               type="number"
+              value={formValues.fatGrams}
             />
           </div>
         </SurfaceCard>

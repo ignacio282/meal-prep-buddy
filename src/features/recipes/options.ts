@@ -6,6 +6,7 @@ export const proteinOptions = [
   { label: "Pork", value: "Pork" },
   { label: "Tofu", value: "Tofu" },
   { label: "Beans", value: "Beans" },
+  { label: "Other", value: "Other" },
 ] as const;
 
 export const cuisineOptions = [
